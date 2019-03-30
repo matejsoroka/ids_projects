@@ -160,27 +160,27 @@ EXCEPTION
       END IF;
 END;
 
-CREATE TABLE player(
+create table player(
   player_id int generated as identity constraint PK_player primary key,
-  name varchar(255),
+  name varchar(64),
   gold int,
   kills int
 );
 
 create table author(
   author_id int generated as identity constraint PK_author primary key,
-  name varchar(255)
+  name varchar(64)
 );
 
 create table location(
   location_id int generated as identity constraint PK_location primary key,
-  name varchar(255)
+  name varchar(64)
 );
 
 create table adventure(
   adventure_id int generated as identity constraint PK_adventure primary key,
   difficulty int,
-  objective varchar(255),
+  objective varchar(64),
   pj_id int,
   location_id int,
   CONSTRAINT FK_Adventure FOREIGN KEY (pj_id) REFERENCES player(player_id),
@@ -204,9 +204,9 @@ create table death(
 
 create table character(
   character_id int generated as identity constraint PK_character primary key,
-  name varchar(255),
-  race varchar(255),
-  class varchar(255),
+  name varchar(64),
+  race varchar(64),
+  class varchar(64),
   "level" int,
   player_id int,
   CONSTRAINT FK_Character FOREIGN KEY (player_id) REFERENCES player(player_id),
@@ -224,7 +224,7 @@ create table character_adventure(
 
 create table equipment(
   equipment_id int generated as identity constraint PK_equipment primary key,
-  type varchar(255)
+  type varchar(64)
 );
 
 create table character_equipment(
@@ -238,28 +238,26 @@ create table character_equipment(
 
 create table game_element(
   element_id int generated as identity constraint PK_element primary key,
-  name varchar(255)
+  name varchar(64)
 );
 
 create table map(
-  element_id int,
-  scale int,
-  CONSTRAINT PK_Map PRIMARY KEY (element_id),
+  scale varchar(64),
+  element_id int generated as identity constraint PK_map primary key,
   CONSTRAINT FK_Map FOREIGN KEY (element_id) REFERENCES game_element ON DELETE CASCADE
 );
 
 create table enemy(
-  race varchar(255),
+  race varchar(64),
   "level" int,
-  element_id int,
-  CONSTRAINT PK_Enemy PRIMARY KEY (element_id),
+  element_id int generated as identity constraint PK_enemy primary key,
   CONSTRAINT FK_Enemy FOREIGN KEY (element_id) REFERENCES game_element ON DELETE CASCADE
 );
 
 create table campaign(
   campaign_id int generated as identity constraint PK_campaign primary key,
   difficulty int,
-  objective varchar(255)
+  objective varchar(64)
 );
 
 create table adventure_campaign(
@@ -273,7 +271,7 @@ create table adventure_campaign(
 create table Sessions(
   session_id int generated as identity constraint PK_session primary key,
   "date" date,
-  place varchar(255)
+  place varchar(64)
 );
 
 create table adventure_game_element(
@@ -291,3 +289,41 @@ create table adventure_session(
   adventure_id int NOT NULL,
   FOREIGN KEY (adventure_id) REFERENCES adventure(adventure_id)
 );
+
+INSERT INTO PLAYER ("NAME", "GOLD", "KILLS") VALUES ('Alex', 12, 6);
+INSERT INTO LOCATION ("NAME") VALUES ('Lost woods');
+INSERT INTO DEATH ("date", "LOCATION_ID") VALUES (TO_DATE('2015/05/03 21:02:44', 'yyyy/mm/dd hh24:mi:ss'), 1);
+INSERT INTO CHARACTER ("NAME", "RACE", "CLASS", "level", "PLAYER_ID", "DEATH_ID") VALUES ('Frodo', 'Elf', 'Warlock', 3, 1, 1);
+INSERT INTO CHARACTER ("NAME", "RACE", "CLASS", "level", "PLAYER_ID") VALUES ('Ocean Almondflame', 'Gnome', 'Cleric', 6, 1);
+INSERT INTO EQUIPMENT ("TYPE") VALUES ('Battleaxe');
+INSERT INTO EQUIPMENT ("TYPE") VALUES ('Arrows');
+INSERT INTO CHARACTER_EQUIPMENT ("QUANTITY", "EQUIPMENT_ID", "CHARACTER_ID") VALUES (1, 1, 1);
+INSERT INTO CHARACTER_EQUIPMENT ("QUANTITY", "EQUIPMENT_ID", "CHARACTER_ID") VALUES (20, 2, 2);
+INSERT INTO CHARACTER_EQUIPMENT ("QUANTITY", "EQUIPMENT_ID", "CHARACTER_ID") VALUES (1, 1, 2);
+INSERT INTO ADVENTURE ("DIFFICULTY", "OBJECTIVE", "PJ_ID", "LOCATION_ID") VALUES (3, 'Kill dragon', 1, 1);
+INSERT INTO CHARACTER_ADVENTURE ("CHARACTER_ID", "ADVENTURE_ID") VALUES (1, 1);
+INSERT INTO CHARACTER_ADVENTURE ("CHARACTER_ID", "ADVENTURE_ID") VALUES (2, 1);
+INSERT INTO AUTHOR ("NAME") VALUES ('Daniel Smith');
+INSERT INTO AUTHOR ("NAME") VALUES ('Rose Hope');
+INSERT INTO ADVENTURE_AUTHOR("ADVENTURE_ID", AUTHOR_ID) VALUES (1, 1);
+INSERT INTO ADVENTURE_AUTHOR("ADVENTURE_ID", AUTHOR_ID) VALUES (1, 2);
+INSERT INTO CAMPAIGN ("DIFFICULTY", "OBJECTIVE") VALUES (3, 'Kill King');
+INSERT INTO ADVENTURE_CAMPAIGN ("CAMPAIGN_ID", "ADVENTURE_ID") VALUES (1, 1);
+INSERT INTO SESSIONS ("date", "PLACE") VALUES (TO_DATE('2019/05/03 21:02:44', 'yyyy/mm/dd hh24:mi:ss'), 'The Black Cat');
+INSERT INTO ADVENTURE_SESSION ("SESSION_ID", "ADVENTURE_ID") VALUES (1, 1);
+INSERT INTO GAME_ELEMENT ("NAME") VALUES ('Bitterblack Isle');
+INSERT INTO MAP ("SCALE") VALUES ('1000:20');
+INSERT INTO ENEMY ("RACE", "level") VALUES ('Elf', 15);
+INSERT INTO GAME_ELEMENT ("NAME") VALUES ('Heraldo Grocery');
+INSERT INTO MAP ("SCALE") VALUES ('10000:50');
+INSERT INTO ENEMY ("RACE", "level") VALUES ('Gnome', 25);
+INSERT INTO ADVENTURE_GAME_ELEMENT ("GAME_ELEMENT", "ADVENTURE_ID") VALUES (1, 1);
+INSERT INTO ADVENTURE_GAME_ELEMENT ("GAME_ELEMENT", "ADVENTURE_ID") VALUES (2, 1);
+
+
+
+
+
+
+
+
