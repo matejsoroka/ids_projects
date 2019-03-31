@@ -192,9 +192,9 @@ create table adventure(
 create table adventure_author(
   adventure_author_id int generated as identity constraint PK_adventure_author primary key,
   adventure_id int NOT NULL,
-  FOREIGN KEY (adventure_id) REFERENCES adventure(adventure_id),
+  FOREIGN KEY (adventure_id) REFERENCES adventure(adventure_id) ON DELETE CASCADE,
   author_id int NOT NULL,
-  FOREIGN KEY (author_id) REFERENCES author(author_id)
+  FOREIGN KEY (author_id) REFERENCES author(author_id) ON DELETE CASCADE
 );
 
 create table death(
@@ -219,9 +219,9 @@ create table character(
 create table character_adventure(
   character_adventure int generated as identity constraint PK_character_adventure primary key,
   character_id int NOT NULL,
-  CONSTRAINT FK_char FOREIGN KEY (character_id) REFERENCES character(character_id),
+  CONSTRAINT FK_char FOREIGN KEY (character_id) REFERENCES character(character_id) ON DELETE CASCADE,
   adventure_id int NOT NULL,
-  CONSTRAINT  FK_adv FOREIGN KEY(adventure_id) REFERENCES adventure(adventure_id)
+  CONSTRAINT  FK_adv FOREIGN KEY(adventure_id) REFERENCES adventure(adventure_id) ON DELETE CASCADE
 );
 
 create table equipment(
@@ -233,9 +233,9 @@ create table character_equipment(
     character_equipment int generated as identity constraint PK_character_equipment primary key,
     quantity int,
     equipment_id int NOT NULL,
-    FOREIGN KEY (equipment_id) REFERENCES equipment(equipment_id),
+    FOREIGN KEY (equipment_id) REFERENCES equipment(equipment_id) ON DELETE CASCADE,
     character_id int NOT NULL,
-    FOREIGN KEY (character_id) REFERENCES character(character_id)
+    FOREIGN KEY (character_id) REFERENCES character(character_id) ON DELETE CASCADE
 );
 
 create table game_element(
@@ -265,9 +265,9 @@ create table campaign(
 create table adventure_campaign(
   adventure_campaign_id int generated as identity constraint PK_adventure_campaign primary key,
   campaign_id int NOT NULL,
-  FOREIGN KEY (campaign_id) REFERENCES campaign(campaign_id),
+  FOREIGN KEY (campaign_id) REFERENCES campaign(campaign_id) ON DELETE CASCADE,
   adventure_id int NOT NULL,
-  FOREIGN KEY (adventure_id) REFERENCES adventure(adventure_id)
+  FOREIGN KEY (adventure_id) REFERENCES adventure(adventure_id) ON DELETE CASCADE
 );
 
 create table sessions(
@@ -279,17 +279,17 @@ create table sessions(
 create table adventure_game_element(
   adventure_game_element_id int generated as identity constraint PK_adventure_game_element primary key,
   game_element int NOT NULL,
-  FOREIGN KEY (game_element) REFERENCES game_element(element_id),
+  FOREIGN KEY (game_element) REFERENCES game_element(element_id) ON DELETE CASCADE,
   adventure_id int NOT NULL,
-  FOREIGN KEY (adventure_id) REFERENCES adventure(adventure_id)
+  FOREIGN KEY (adventure_id) REFERENCES adventure(adventure_id) ON DELETE CASCADE
 );
 
 create table adventure_session(
   adventure_session_id int generated as identity constraint PK_adventure_session primary key,
   session_id int NOT NULL,
-  FOREIGN KEY (session_id) REFERENCES sessions(session_id),
+  FOREIGN KEY (session_id) REFERENCES sessions(session_id) ON DELETE CASCADE,
   adventure_id int NOT NULL,
-  FOREIGN KEY (adventure_id) REFERENCES adventure(adventure_id)
+  FOREIGN KEY (adventure_id) REFERENCES adventure(adventure_id) ON DELETE CASCADE
 );
 
 -- INSERTING DUMMY DATA
