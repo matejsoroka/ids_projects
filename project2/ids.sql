@@ -1,3 +1,4 @@
+-- DROPPING TABLES IF NOT EXIST
 BEGIN
    EXECUTE IMMEDIATE 'DROP TABLE ' || 'adventure_author';
 EXCEPTION
@@ -160,6 +161,7 @@ EXCEPTION
       END IF;
 END;
 
+-- CREATING TABLES
 create table player(
   player_id int generated as identity constraint PK_player primary key,
   name varchar(64),
@@ -189,7 +191,7 @@ create table adventure(
 
 create table adventure_author(
   adventure_author_id int generated as identity constraint PK_adventure_author primary key,
-  adventure_id int,
+  adventure_id int NOT NULL,
   FOREIGN KEY (adventure_id) REFERENCES adventure(adventure_id),
   author_id int NOT NULL,
   FOREIGN KEY (author_id) REFERENCES author(author_id)
@@ -230,9 +232,9 @@ create table equipment(
 create table character_equipment(
     character_equipment int generated as identity constraint PK_character_equipment primary key,
     quantity int,
-    equipment_id int,
+    equipment_id int NOT NULL,
     FOREIGN KEY (equipment_id) REFERENCES equipment(equipment_id),
-    character_id int,
+    character_id int NOT NULL,
     FOREIGN KEY (character_id) REFERENCES character(character_id)
 );
 
@@ -262,13 +264,13 @@ create table campaign(
 
 create table adventure_campaign(
   adventure_campaign_id int generated as identity constraint PK_adventure_campaign primary key,
-  campaign_id int,
+  campaign_id int NOT NULL,
   FOREIGN KEY (campaign_id) REFERENCES campaign(campaign_id),
   adventure_id int NOT NULL,
   FOREIGN KEY (adventure_id) REFERENCES adventure(adventure_id)
 );
 
-create table Sessions(
+create table sessions(
   session_id int generated as identity constraint PK_session primary key,
   "date" date,
   place varchar(64)
@@ -278,18 +280,19 @@ create table adventure_game_element(
   adventure_game_element_id int generated as identity constraint PK_adventure_game_element primary key,
   game_element int NOT NULL,
   FOREIGN KEY (game_element) REFERENCES game_element(element_id),
-  adventure_id int,
+  adventure_id int NOT NULL,
   FOREIGN KEY (adventure_id) REFERENCES adventure(adventure_id)
 );
 
 create table adventure_session(
   adventure_session_id int generated as identity constraint PK_adventure_session primary key,
-  session_id int,
+  session_id int NOT NULL,
   FOREIGN KEY (session_id) REFERENCES sessions(session_id),
   adventure_id int NOT NULL,
   FOREIGN KEY (adventure_id) REFERENCES adventure(adventure_id)
 );
 
+-- INSERTING DUMMY DATA
 INSERT INTO PLAYER ("NAME", "GOLD", "KILLS") VALUES ('Alex', 12, 6);
 INSERT INTO LOCATION ("NAME") VALUES ('Lost woods');
 INSERT INTO DEATH ("date", "LOCATION_ID") VALUES (TO_DATE('2015/05/03 21:02:44', 'yyyy/mm/dd hh24:mi:ss'), 1);
@@ -317,8 +320,6 @@ INSERT INTO ADVENTURE_GAME_ELEMENT ("GAME_ELEMENT", "ADVENTURE_ID") VALUES (1, 1
 INSERT INTO GAME_ELEMENT ("NAME") VALUES ('Heraldo');
 INSERT INTO ENEMY ("RACE", "level") VALUES ('Elf', 15);
 INSERT INTO ADVENTURE_GAME_ELEMENT ("GAME_ELEMENT", "ADVENTURE_ID") VALUES (2, 1);
-
-
 INSERT INTO PLAYER ("NAME", "GOLD", "KILLS") VALUES ('Matej', 42, 3);
 INSERT INTO LOCATION ("NAME") VALUES ('Forgotten dungeon');
 INSERT INTO EQUIPMENT ("TYPE") VALUES ('Sword');
@@ -328,7 +329,8 @@ INSERT INTO CHARACTER ("NAME", "RACE", "CLASS", "level", "PLAYER_ID") VALUES ('G
 INSERT INTO CHARACTER_EQUIPMENT ("QUANTITY", "EQUIPMENT_ID", "CHARACTER_ID") VALUES (10, 3, 3);
 INSERT INTO CHARACTER_EQUIPMENT ("QUANTITY", "EQUIPMENT_ID", "CHARACTER_ID") VALUES (1, 4, 3);
 INSERT INTO DEATH ("date", "LOCATION_ID") VALUES (TO_DATE('2019/03/20 20:02:44', 'yyyy/mm/dd hh24:mi:ss'), 2);
-INSERT INTO ADVENTURE ("PJ_ID", "LOCATION_ID", "OBJECTIVE", "DIFFICULTY") VALUES (1, 2, 'Kill the Smorg', 4);
+UPDATE CHARACTER SET DEATH_ID = 2 WHERE CHARACTER_ID = 3;
+INSERT INTO ADVENTURE ("PJ_ID", "LOCATION_ID", "OBJECTIVE", "DIFFICULTY") VALUES (2, 2, 'Kill the Smorg', 4);
 INSERT INTO CHARACTER_ADVENTURE ("CHARACTER_ID", "ADVENTURE_ID") VALUES (3, 2);
 INSERT INTO ADVENTURE_AUTHOR ("ADVENTURE_ID", "AUTHOR_ID") VALUES (2, 1);
 INSERT INTO SESSIONS ("date", "PLACE") VALUES (TO_DATE('2019/03/20 20:02:44', 'yyyy/mm/dd hh24:mi:ss'), 'At Merlin''s home');
@@ -339,7 +341,7 @@ INSERT INTO GAME_ELEMENT ("NAME") VALUES ('Map of Midgard');
 INSERT INTO MAP ("SCALE") VALUES ('1:34');
 INSERT INTO GAME_ELEMENT ("NAME") VALUES ('Elre Valamin');
 INSERT INTO ENEMY ("RACE", "level") VALUES ('Elf', 2);
-INSERT INTO ADVENTURE_GAME_ELEMENT ("GAME_ELEMENT", "ADVENTURE_ID") VALUES (3, 1);
+INSERT INTO ADVENTURE_GAME_ELEMENT ("GAME_ELEMENT", "ADVENTURE_ID") VALUES (3, 2);
 INSERT INTO ADVENTURE_GAME_ELEMENT ("GAME_ELEMENT", "ADVENTURE_ID") VALUES (4, 2);
 
 COMMIT
