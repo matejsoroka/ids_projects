@@ -1,21 +1,8 @@
 {% include "header.html" %}
 <div class="container">
-    <h1 class="text-center">Players</h1>
-    <table class="table">
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Gold</th>
-            <th>Kills</th>
-        </tr>
-        {% for player in players %}
-        <tr>
-            <td>{{ player[0] }}</td>
-            <td>{{ player[1] }}</td>
-            <td>{{ player[2] }}</td>
-            <td>{{ player[3] }}</td>
-        </tr>
-        {% endfor %}
-    </table>
+    <h1 class="text-center">D&D Database</h1>
+    <ul>
+        <li><a href="/players">Players</a></li>
+    </ul>
 </div>
 {% include "footer.html" %}
