@@ -39,6 +39,13 @@ def adventure_add():
         insert_authors.append((int(author[0]), author[1]))
     form.authors.choices = insert_authors
 
+    cur.execute("SELECT * FROM PLAYER")
+    players = cur.fetchall()
+    insert_players = []
+    for player in players:
+        insert_players.append((int(player[0]), player[1]))
+    form.pj.choices = insert_players
+
     cur.execute("SELECT * FROM LOCATION")
     locations = cur.fetchall()
     insert_location = []
@@ -54,7 +61,23 @@ def adventure_add():
     form.game_elements.choices = insert_game_element
 
     if form.validate_on_submit():
-        print(form)
+        query = "INSERT INTO ADVENTURE (OBJECTIVE, DIFFICULTY, PJ_ID, LOCATION_ID) VALUES ('{}', {}, {}, {})".format(
+            form.objective.data, form.difficulty.data, form.pj.data, form.location.data)
+        cur.execute(query)
+        cur.close()
+        connection.commit()
+        cur = connection.cursor()
+        cur.execute("SELECT adventure_id FROM ADVENTURE ORDER BY ADVENTURE_ID DESC")
+        adventure_id = cur.fetchone()[0]
+        for author in form.authors.data:
+            cur.execute("INSERT INTO ADVENTURE_AUTHOR (ADVENTURE_ID, AUTHOR_ID) VALUES ({}, {})".format(adventure_id,
+                                                                                                        author))
+        for game_element in form.game_elements.data:
+            cur.execute("INSERT INTO ADVENTURE_GAME_ELEMENT (ADVENTURE_ID, GAME_ELEMENT) VALUES ({}, {})".format(
+                adventure_id, game_element))
+        cur.close()
+        connection.commit()
+        connection.close()
         return redirect(url_for('adventures'))
     cur.close()
     connection.commit()
