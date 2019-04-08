@@ -33,6 +33,24 @@ def players():
     return render_template("players.html", players=[(1, 'Alex', 12, 6), (2, 'Matej', 42, 3)])
 
 
+@app.route('/player/<id>')
+def player(id):
+    return render_template("player.html", id=id)
+
+
+@app.route('/player-add/<id>', methods=['GET', 'POST'])
+def player_update(id):
+    form = PlayerInsertForm.PlayerInsertForm()
+    if request.method == 'POST' and form.validate():
+        ...
+        # user = User(form.username.data, form.email.data,
+        #             form.password.data)
+        # db_session.add(user)
+        # flash('Thanks for registering')
+        # return redirect(url_for('player-add'))
+    return render_template("player_add.html", form=form)
+
+
 @app.route('/player-add', methods=['GET', 'POST'])
 def player_add():
     form = PlayerInsertForm.PlayerInsertForm()

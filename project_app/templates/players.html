@@ -1,12 +1,18 @@
 {% include "header.html" %}
 <div class="container">
     <h1 class="text-center">Players</h1>
+    <div class="row grid-buttons">
+        <div class="col4">
+            <a href="/player-add" class="btn btn-success">Add player</a>
+        </div>
+    </div>
     <table class="table">
         <tr>
             <th>ID</th>
             <th>Name</th>
             <th>Gold</th>
             <th>Kills</th>
+            <th></th>
         </tr>
         {% for player in players %}
         <tr>
@@ -14,6 +20,10 @@
             <td>{{ player[1] }}</td>
             <td>{{ player[2] }}</td>
             <td>{{ player[3] }}</td>
+            <td>
+                <a class="btn btn-sm btn-primary" href="/player/{{ player[0] }}"><i class="fa fa-eye"></i></a>
+                <a class="btn btn-sm btn-danger" href="/delete-player/{{ player[0] }}"><i class="fa fa-trash"></i></a>
+            </td>
         </tr>
         {% endfor %}
     </table>
