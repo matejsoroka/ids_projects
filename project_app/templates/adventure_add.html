@@ -1,6 +1,6 @@
 {% include "header.html" %}
     <div class="container">
-        <h1 class="text-center">Adding player</h1>
+        <h1 class="text-center">Adding adventure</h1>
         <form method="POST" enctype="multipart/form-data">
             {% for fieldName, errorMessages in form.errors.items() %}
                 {% for err in errorMessages %}
@@ -11,16 +11,24 @@
             {% endfor %}
             {{ form.csrf_token }}
             <div class="form-group">
-                {{ form.username.label }}
-                {{ form.username(class_="form-control") }}
+                {{ form.objective.label }}
+                {{ form.objective(class_="form-control") }}
             </div>
             <div class="form-group">
-                {{ form.kills.label }}
-                {{ form.kills(class_="form-control") }}
+                {{ form.difficulty.label }}
+                {{ form.difficulty(class_="form-control") }}
             </div>
             <div class="form-group">
-                {{ form.gold.label }}
-                {{ form.gold(class_="form-control") }}
+                {{ form.location.label }}
+                {{ form.location(class_="form-control") }}
+            </div>
+            <div class="form-group">
+                {{ form.game_elements.label }}
+                {{ form.game_elements(class_="form-control") }}
+            </div>
+            <div class="form-group">
+                {{ form.authors.label }}
+                {{ form.authors(class_="form-control") }}
             </div>
             <input type="submit" value="Add" class="btn btn-primary"/>
         </form>

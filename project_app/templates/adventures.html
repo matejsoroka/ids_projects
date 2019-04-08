@@ -1,0 +1,29 @@
+{% include "header.html" %}
+<div class="container">
+    <h1 class="text-center">Adventures</h1>
+    <div class="row grid-buttons">
+        <div class="col4">
+            <a href="/adventure-add" class="btn btn-success">Add adventure</a>
+        </div>
+    </div>
+    <table class="table">
+        <tr>
+            <th>ID</th>
+            <th>Objective</th>
+            <th>Difficulty</th>
+            <th></th>
+        </tr>
+        {% for adventure in adventures %}
+        <tr>
+            <td>{{ adventure[0] }}</td>
+            <td>{{ adventure[2] }}</td>
+            <td>{{ adventure[1] }}</td>
+            <td>
+                <a class="btn btn-sm btn-primary" href="/adventure/{{ adventure[0] }}"><i class="fa fa-eye"></i></a>
+                <a class="btn btn-sm btn-danger" href="/delete-adventure/{{ adventure[0] }}"><i class="fa fa-trash"></i></a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% include "footer.html" %}

@@ -1,5 +1,20 @@
 {% include "header.html" %}
 <div class="container">
-    <h1 class="text-center">Player with id {{ id }}</h1>
+    <div class="row">
+        <h1 class="col-12 text-center">{{ player[1] }} {{ player[0] }}</h1>
+        <div class="col-12">
+            <p class="text-center">{{ player[2] }} <i class="fa fa-coins"></i> {{ player[3] }} <i class="fa fa-skull-crossbones"></i></p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <h2 class="text-center">Characters</h2>
+            <ul>
+            {% for character in characters %}
+                <li><a href="/character/{{ character[0] }}">{{ character[1] }} ({{ character[2] }})</a></li>
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
 </div>
 {% include "footer.html" %}
