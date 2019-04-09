@@ -1,5 +1,5 @@
 from flask import Flask, render_template, url_for, redirect
-from model import PlayerInsertForm, AdventureInsertForm, CharacterInsertForm, model
+from model import PlayerInsertForm, AdventureInsertForm, CharacterInsertForm, SessionInsertForm, model
 
 app = Flask(__name__)
 model = model.Model()
@@ -13,6 +13,27 @@ def index():
 @app.route('/adventures')
 def adventures():
     return render_template("adventures.html", adventures=model.get_table("adventure"))
+
+
+@app.route('/sessions')
+def sessions():
+    return render_template("sessions.html", adventures=model.get_table("sessions"))
+
+
+@app.route('/session-add', methods=('GET', 'POST'))
+def session_add():
+    form = SessionInsertForm.SessionInsertForm()
+    #  setting default values for from elements
+    form.adventures.choices = model.get_pairs("adventure")
+
+    if form.validate_on_submit():  # on form submit
+        adventure_insert = {"date": form.date.data, "place": form.place.data}
+        model.insert("sessions", adventure_insert)
+        session_id = model.get_last_id("sessions")
+        for adventure in form.adventures.data:
+            model.insert("adventure_session", {"adventure_id": adventure, "session_id": session_id})
+        return redirect(url_for('adventures'))
+    return render_template("session_add.html", form=form)
 
 
 @app.route('/adventure-add', methods=('GET', 'POST'))

@@ -1,0 +1,28 @@
+{% include "header.html" %}
+    <div class="container">
+        <h1 class="text-center">Adding session</h1>
+        <form method="POST" enctype="multipart/form-data">
+            {% for fieldName, errorMessages in form.errors.items() %}
+                {% for err in errorMessages %}
+                <div class="alert alert-danger" role="alert">
+                    {{ fieldName }}: {{ err }}
+                </div>
+                {% endfor %}
+            {% endfor %}
+            {{ form.csrf_token }}
+            <div class="form-group">
+                {{ form.place.label }}
+                {{ form.place(class_="form-control") }}
+            </div>
+            <div class="form-group">
+                {{ form.date.label }}
+                {{ form.date(class_="form-control") }}
+            </div>
+            <div class="form-group">
+                {{ form.adventures.label }}
+                {{ form.adventures(class_="form-control") }}
+            </div>
+            <input type="submit" value="Add" class="btn btn-primary"/>
+        </form>
+    </div>
+{% include "footer.html" %}
