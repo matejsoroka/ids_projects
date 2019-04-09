@@ -62,6 +62,10 @@ def player(id):
     character_data = model.get_player_characters(id)
     return render_template("player.html", player=player_data, characters=character_data)
 
+@app.route('/character/<id>')
+def character(id):
+    return render_template("character.html", character=model.get_row("character", id))
+
 
 @app.route('/player-add', methods=('GET', 'POST'))
 def player_add():
