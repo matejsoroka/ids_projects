@@ -1,5 +1,5 @@
 from flask import Flask, render_template, url_for, redirect
-from model import PlayerInsertForm, AdventureInsertForm, model
+from model import PlayerInsertForm, AdventureInsertForm, CharacterInsertForm, model
 
 app = Flask(__name__)
 model = model.Model()
@@ -23,6 +23,7 @@ def adventure_add():
     form.pj.choices = model.get_pairs("player")
     form.location.choices = model.get_pairs("location")
     form.game_elements.choices = model.get_pairs("game_element")
+    form.characters.choices = model.get_pairs("character")
 
     if form.validate_on_submit():  # on form submit
         adventure_insert = {"objective": form.objective.data, "difficulty": form.difficulty.data, "PJ_ID": form.pj.data,
@@ -31,6 +32,8 @@ def adventure_add():
         adventure_id = model.get_last_id("adventure")
         for author in form.authors.data:
             model.insert("adventure_author", {"adventure_id": adventure_id, "author_id": author})
+        for character in form.characters.data:
+            model.insert("character_adventure", {"adventure_id": adventure_id, "character_id": character})
         for game_element in form.game_elements.data:
             model.insert("adventure_game_element", {"adventure_id": adventure_id, "game_element": game_element})
         return redirect(url_for('adventures'))
@@ -62,14 +65,26 @@ def player(id):
     character_data = model.get_player_characters(id)
     return render_template("player.html", player=player_data, characters=character_data)
 
+
 @app.route('/character/<id>')
 def character(id):
     return render_template("character.html", character=model.get_row("character", id))
 
 
+@app.route('/character-add', methods=('GET', 'POST'))
+def character_add():
+    form = CharacterInsertForm.CharacterInsertForm()
+    form.player.choices = model.get_pairs('player')
+    if form.validate_on_submit():
+        model.insert("character", {"name": form.name.data, "race": form.race.data, "class": form.c_class.data,
+                                   "level": form.level.data, "player_id": form.player.data})
+        return redirect(url_for('players'))
+    return render_template("character_add.html", form=form)
+
+
 @app.route('/player-add', methods=('GET', 'POST'))
 def player_add():
-    form = PlayerInsertForm.PlayerInsertForm()
+    form = CharacterInsertForm.CharacterInsertForm()
     if form.validate_on_submit():
         model.insert("player", {"name": form.username.data, "gold": form.gold.data, "kills": form.kills.data})
         return redirect(url_for('players'))

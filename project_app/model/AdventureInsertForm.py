@@ -8,4 +8,5 @@ class AdventureInsertForm(FlaskForm):
     location = SelectField('Location', coerce=int)
     authors = SelectMultipleField('Authors', coerce=int)
     game_elements = SelectMultipleField('Game elements', coerce=int)
+    characters = SelectMultipleField('Characters', coerce=int)
     pj = SelectField('PJ', coerce=int)

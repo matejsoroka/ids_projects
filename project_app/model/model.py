@@ -28,16 +28,19 @@ class Model:
     def insert(self, table, data):
         """Inserts row into table where data = {col_name: data, ...}"""
         query = "INSERT INTO {} ".format(table)
-        cols = values = ""
+        cols = values = ''
         i = 1
         for key, value in data.items():
-            cols = cols + key
+            if key == "level":
+                cols = cols + '"' + key + '"'
+            else:
+                cols = cols + key
             if isinstance(value, str):
                 values = values + "'" + value + "'"
             else:
                 values = values + str(value)
             if i != len(data):
-                cols = cols + ","
+                cols = cols + ','
                 values = values + ","
             i = i + 1
         query = query + "(" + cols + ") VALUES (" + values + ")"
