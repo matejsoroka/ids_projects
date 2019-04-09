@@ -92,11 +92,13 @@ def character(character_id):
     return render_template("character.html", character=model.get_row("character", character_id))
 
 
-@app.route('/character-add', methods=('GET', 'POST'))
-def character_add():
+@app.route('/character-add/', methods=('GET', 'POST'))
+@app.route('/character-add/<player_id>', methods=('GET', 'POST'))
+def character_add(player_id=1):
     form = CharacterInsertForm.CharacterInsertForm()
     form.player.choices = model.get_pairs('player')
     form.race.choices = model.get_pairs('race')
+    form.player.process_data(player_id)
     if form.validate_on_submit():
         model.insert("character", {"name": form.name.data, "race": form.race.data, "class": form.c_class.data,
                                    "level": form.level.data, "player_id": form.player.data})

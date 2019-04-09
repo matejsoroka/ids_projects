@@ -9,6 +9,9 @@
     <div class="row">
         <div class="col-6">
             <h2 class="text-center">Characters</h2>
+            <div class="col-12">
+                <a class="btn btn-xs btn-success" href="/add-character/{{ player[0] }}"><i class="fa fa-plus-circle"></i> Add character</a>
+            </div>
             <ul>
             {% for character in characters %}
                 <li><a href="/character/{{ character[0] }}">{{ character[1] }} ({{ character[2] }})</a></li>
