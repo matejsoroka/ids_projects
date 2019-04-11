@@ -5,3 +5,58 @@ h1 {
 .grid-buttons {
     margin: 1em 0;
 }
+
+body {
+    background-color: #330b1d;
+    background-image: url("../images/rock_and_man.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    font-family: "Lucida Console", Monaco, monospace;
+}
+
+/*HOMEPAGE*/
+.navbar {
+    padding: 0;
+}
+
+.navbar .container {
+   background-color: #330b1d;
+}
+
+.collapse {
+    justify-content: center;
+}
+
+/*logo*/
+#logo {
+    height: 150px;
+    width: auto;
+    margin: 50px 20px 0 20px
+}
+
+/*nav*/
+.navbar-nav .nav-link {
+    color: #e2c624;
+    text-transform: uppercase;
+    font-size: 20px;
+    text-decoration: none;
+    animation: neon1 1.5s ease-in-out infinite alternate;
+}
+
+.navbar-nav {
+    margin-top: 35px;
+}
+
+.nav-item{
+    margin: 0 15px;
+}
+
+/*glow*/
+@keyframes neon1 {
+  from {
+    text-shadow: 0 0 10px #bc6f00, 0 0 20px #bc6f00, 0 0 30px #bc6f00, 0 0 40px #fbb11e, 0 0 60px #fbb11e, 0 0 70px #ffec7c, 0 0 80px #ffec7c, 0 0 130px #ffec7c;
+  }
+  to {
+    text-shadow: 0 0 5px #bc6f00, 0 0 10px #bc6f00, 0 0 15px #bc6f00, 0 0 20px #fbb11e, 0 0 35px #fbb11e, 0 0 40px #ffec7c, 0 0 50px #ffec7c, 0 0 75px #ffec7c;
+  }
+}
