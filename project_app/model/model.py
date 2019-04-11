@@ -65,3 +65,8 @@ class Model:
                             "GROUP BY CHARACTER.CHARACTER_ID, CHARACTER.NAME "
                             "ORDER BY adventure_count DESC".format(player_id))
         return self.cursor.fetchall()
+
+    def delete_row(self, table, id):
+        """Removes row from table with specific id (doesn't work when table_name != table_name_id)"""
+        self.cursor.execute("DELETE FROM {} WHERE {}_id={}".format(table, table, id))
+        self.db.commit()

@@ -63,7 +63,7 @@ def adventure_add():
 
 @app.route('/delete-adventure/<adventure_id>')
 def delete_adventure(adventure_id):
-    model.cursor.execute("DELETE FROM ADVENTURE WHERE adventure_id={}".format(adventure_id))
+    model.delete_row('adventure', adventure_id)
     model.db.commit()
     return redirect(url_for('adventures'))
 
@@ -75,8 +75,7 @@ def players():
 
 @app.route('/delete-player/<player_id>')
 def delete_player(player_id):
-    model.cursor.execute("DELETE FROM PLAYER WHERE player_id={}".format(player_id))
-    model.db.commit()
+    model.delete_row("player", player_id)
     return redirect(url_for('players'))
 
 

@@ -194,7 +194,7 @@ create table adventure(
   objective varchar(64),
   pj_id int,
   location_id int,
-  CONSTRAINT FK_Adventure FOREIGN KEY (pj_id) REFERENCES player(player_id),
+  CONSTRAINT FK_Adventure FOREIGN KEY (pj_id) REFERENCES player(player_id) ON DELETE SET NULL,
   CONSTRAINT FK_Location FOREIGN KEY (location_id) REFERENCES location(location_id)
 );
 
@@ -213,7 +213,7 @@ create table death(
   CONSTRAINT FK_Death FOREIGN KEY (location_id) REFERENCES location(location_id)
 );
 
-create table race (
+create table race(
   race_id int generated as identity constraint PK_race_id primary key,
   name varchar(64),
   image varchar(256)
@@ -227,7 +227,7 @@ create table character(
   class varchar(16),
   "level" int,
   player_id int,
-  CONSTRAINT FK_Character FOREIGN KEY (player_id) REFERENCES player(player_id),
+  CONSTRAINT FK_Character FOREIGN KEY (player_id) REFERENCES player(player_id) ON DELETE CASCADE,
   death_id int,
   FOREIGN KEY (death_id) REFERENCES Death(death_id)
 );
@@ -365,6 +365,3 @@ INSERT INTO ADVENTURE_GAME_ELEMENT ("GAME_ELEMENT", "ADVENTURE_ID") VALUES (3, 2
 INSERT INTO ADVENTURE_GAME_ELEMENT ("GAME_ELEMENT", "ADVENTURE_ID") VALUES (4, 2);
 
 COMMIT
-
-
-
