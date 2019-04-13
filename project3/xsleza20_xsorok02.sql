@@ -343,7 +343,6 @@ INSERT INTO GAME_ELEMENT ("NAME") VALUES ('Elre Valamin');
 INSERT INTO ENEMY ("RACE", "level") VALUES ('Elf', 2);
 INSERT INTO ADVENTURE_GAME_ELEMENT ("GAME_ELEMENT", "ADVENTURE_ID") VALUES (3, 2);
 INSERT INTO ADVENTURE_GAME_ELEMENT ("GAME_ELEMENT", "ADVENTURE_ID") VALUES (4, 2);
-
 INSERT INTO ADVENTURE ("DIFFICULTY", "OBJECTIVE", "PJ_ID", "LOCATION_ID") VALUES (5, 'Kill queen', 1, 1);
 INSERT INTO CHARACTER_ADVENTURE ("CHARACTER_ID", "ADVENTURE_ID") VALUES (2, 3);
 INSERT INTO PLAYER ("NAME", "GOLD", "KILLS") VALUES ('Foo', 12, 6);
@@ -352,62 +351,52 @@ INSERT INTO CHARACTER_ADVENTURE ("CHARACTER_ID", "ADVENTURE_ID") VALUES (3, 1);
 
 -- dotaz vyuzivajuci spojenie 2 tabuliek
   -- vyber hracovej postavy s najvyssim levelom
-SELECT PLAYER.player_id, CHARACTER.name, CHARACTER."level" from CHARACTER
+SELECT PLAYER.name as player_name, CHARACTER.name as character_name, CHARACTER."level" from CHARACTER
   join PLAYER on CHARACTER.player_id = PLAYER.player_id
   where CHARACTER."level" = ALL
     (SELECT max(CHARACTER."level") from CHARACTER where CHARACTER.player_id = PLAYER.player_id);
 
--- dotaz vyuzivajuci spojenie 4 tabuliek
+-- dotaz vyuzivajuci spojenie 2 tabuliek
+  -- spojenie adventury a lokacie v ktorej sa adventúra odohrala
+SELECT ADVENTURE.objective, adventure.difficulty, l.name as location_name, l.location_id from ADVENTURE
+  JOIN LOCATION l on ADVENTURE.location_id = l.location_id;
+
+-- dotaz vyuzivajuci spojenie 3 tabuliek
   -- vyber vybavenia pre kazdu postavu
-SELECT PLAYER.player_id, CHARACTER.name, EQUIPMENT.type, CHARACTER_EQUIPMENT.quantity FROM PLAYER
-  join CHARACTER on CHARACTER.player_id = PLAYER.player_id
+SELECT CHARACTER.name, EQUIPMENT.type, CHARACTER_EQUIPMENT.quantity FROM CHARACTER
   join CHARACTER_EQUIPMENT on CHARACTER_EQUIPMENT.character_id = CHARACTER.character_id
   join EQUIPMENT on EQUIPMENT.equipment_id = CHARACTER_EQUIPMENT.equipment_id
-  ORDER BY CHARACTER_EQUIPMENT.quantity DESC ;
+  ORDER BY CHARACTER.name DESC;
 
 -- dotaz s GROUP BY a agregacnou funkciou
   -- kolkych dobrodruzstiev sa zucastnili jednotlive postavy
-SELECT CHARACTER.CHARACTER_ID, CHARACTER.NAME, COUNT(*) as adventure_count FROM CHARACTER, CHARACTER_ADVENTURE, PLAYER
-  WHERE CHARACTER_ADVENTURE.CHARACTER_ID = CHARACTER.CHARACTER_ID and CHARACTER.PLAYER_ID = PLAYER.PLAYER_ID
+SELECT CHARACTER.CHARACTER_ID, CHARACTER.NAME, COUNT(*) as adventure_count FROM CHARACTER, CHARACTER_ADVENTURE
+  WHERE CHARACTER_ADVENTURE.CHARACTER_ID = CHARACTER.CHARACTER_ID
   GROUP BY CHARACTER.CHARACTER_ID, CHARACTER.NAME
   ORDER BY adventure_count DESC;
 
+-- dotaz s GROUP BY a agregacnou funkciou
+  -- Počet smrtí v každej lokácii
+SELECT LOCATION.name, COUNT(*) as death_count FROM death, location
+  WHERE LOCATION.location_id = DEATH.location_id
+  GROUP BY LOCATION.name
+  ORDER BY death_count DESC;
+
 -- dotaz s EXISTS
-  -- test na zistenie existencie sedenia
-SELECT * FROM SESSIONS
-  WHERE EXISTS(SELECT ADVENTURE_SESSION.session_id FROM ADVENTURE_SESSION
-    WHERE SESSIONS.session_id = ADVENTURE_SESSION.session_id);
+  -- Výber mŕtvych postáv
+SELECT * FROM CHARACTER
+  WHERE EXISTS(SELECT CHARACTER_ID FROM DEATH WHERE DEATH.DEATH_ID = CHARACTER.DEATH_ID);
 
 -- dotaz s IN
-  -- vyber postav, ktore sa zucastnili dobrodruzstva s rovnakou obtiaznostou
-SELECT CHARACTER.name, ADVENTURE.difficulty FROM CHARACTER
- join CHARACTER_ADVENTURE on CHARACTER.character_id = CHARACTER_ADVENTURE.character_id
- join ADVENTURE on ADVENTURE.adventure_id = CHARACTER_ADVENTURE.adventure_id
- where ADVENTURE.difficulty in (SELECT ADVENTURE.adventure_id from ADVENTURE);
-
- -- -- Selecting equipment with quantity
- -- SELECT CHARACTER.CHARACTER_ID, EQUIPMENT.TYPE, CHARACTER_EQUIPMENT.QUANTITY
- -- FROM EQUIPMENT, CHARACTER_EQUIPMENT, CHARACTER
- -- WHERE CHARACTER.CHARACTER_ID = CHARACTER_EQUIPMENT.CHARACTER_ID AND
- --       EQUIPMENT.EQUIPMENT_ID = CHARACTER_EQUIPMENT.EQUIPMENT_ID
- --
-
- -- -- Selecting dead/alive characters
- -- SELECT CHARACTER.NAME FROM CHARACTER
- -- WHERE EXISTS(SELECT CHARACTER_ID FROM DEATH WHERE DEATH.DEATH_ID = CHARACTER.DEATH_ID)
-
- -- SELECT CHARACTER.NAME FROM CHARACTER
- -- WHERE NOT EXISTS(SELECT CHARACTER_ID FROM DEATH WHERE DEATH.DEATH_ID = CHARACTER.DEATH_ID)
-
- -- -- Selecting adventures in sessions played between two dates
- -- SELECT ADVENTURE.OBJECTIVE FROM ADVENTURE WHERE
- -- ADVENTURE.ADVENTURE_ID
- --   IN (
- --     SELECT ADVENTURE_SESSION.ADVENTURE_ID
- --     FROM ADVENTURE_SESSION, SESSIONS
- --     WHERE ADVENTURE_SESSION.SESSION_ID = ADVENTURE.ADVENTURE_ID AND
- --           SESSIONS.SESSION_ID = ADVENTURE_SESSION.SESSION_ID AND
- --           SESSIONS."date" BETWEEN TO_DATE('1.3.2019', 'dd.mm.yyyy') AND TO_DATE('1.4.2019', 'dd.mm.yyyy')
- --   )
+  -- Výber dobrodružstiev hraných v dátume medzi 1.3.2019 a 1.4.2019
+ SELECT ADVENTURE.OBJECTIVE FROM ADVENTURE WHERE
+ ADVENTURE.ADVENTURE_ID
+   IN (
+     SELECT ADVENTURE_SESSION.ADVENTURE_ID
+     FROM ADVENTURE_SESSION, SESSIONS
+     WHERE ADVENTURE_SESSION.SESSION_ID = ADVENTURE.ADVENTURE_ID AND
+           SESSIONS.SESSION_ID = ADVENTURE_SESSION.SESSION_ID AND
+           SESSIONS."date" BETWEEN TO_DATE('1.3.2019', 'dd.mm.yyyy') AND TO_DATE('1.4.2019', 'dd.mm.yyyy')
+   );
 
 COMMIT
