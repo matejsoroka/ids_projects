@@ -1,50 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Dračí doupě</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
-    <link rel="stylesheet" href="../static/css/multi-select.css">
-    <link rel="stylesheet" href="../static/css/style.css">
-</head>
-<body id="players">
-    {% include "header.html" %}
-    <div class="container">
-        <div class="row">
-            <h1 class="col-12 text-center">{{ player[1] }} {{ player[0] }}</h1>
-            <div class="col-12">
-                <p class="text-center">{{ player[2] }} <i class="fa fa-coins"></i> {{ player[3] }} <i class="fa fa-skull-crossbones"></i></p>
-            </div>
+{% extends 'base.html' %}
+{% block content %}
+{% include "header.html" %}
+<div class="container" id="players">
+    <div class="row">
+        <h1 class="col-12 text-center">{% block title %}{{ player[1] }}{% endblock %} {{ player[0] }}</h1>
+        <div class="col-12">
+            <p class="text-center">{{ player[2] }} <i class="fa fa-coins"></i> {{ player[3] }} <i class="fa fa-skull-crossbones"></i></p>
         </div>
-        <div class="row">
-            <div class="col-6">
-                <div class="table_dragon">
-                    <div class="row grid-buttons buttons">
-                        <div class="col4">
-                            <a class="btn btn-xs btn-success" href="/add-character/{{ player[0] }}"><i class="fa fa-plus-circle"></i> Přidat postavu </a>
-                        </div>
-                     </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <div class="table_dragon">
+                <div class="row grid-buttons buttons">
+                    <div class="col4">
+                        <a class="btn btn-xs btn-success" href="/add-character/{{ player[0] }}"><i class="fa fa-plus-circle"></i> Přidat postavu </a>
+                    </div>
+                 </div>
 
-                    <img src="../static/images/d6.png">
-                    <table>
-                        <tr>
-                            <th>Postava</th>
-                            <th></th>
-                        </tr>
-                        {% for character in characters %}
-                        <tr>
-                            <td>
-                                <a href="/character/{{ character[0] }}">
-                                   {{ character[1] }} ({{ character[2] }})
-                                </a>
-                            </td>
-                            <td></td>
-                        </tr>
-                        {% endfor %}
-                    </table>
-                </div>
+                <img src="../static/images/d6.png">
+                <table>
+                    <tr>
+                        <th>Postava</th>
+                        <th></th>
+                    </tr>
+                    {% for character in characters %}
+                    <tr>
+                        <td>
+                            <a href="/character/{{ character[0] }}">
+                               {{ character[1] }} ({{ character[2] }})
+                            </a>
+                        </td>
+                        <td></td>
+                    </tr>
+                    {% endfor %}
+                </table>
             </div>
         </div>
     </div>
-    {% include "footer.html" %}
+</div>
+{% endblock %}
