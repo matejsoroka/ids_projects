@@ -6,12 +6,28 @@ h1 {
     margin: 1em 0;
 }
 
-body {
-    background-color: #330b1d;
-    background-image: url("../images/rock_and_man.png");
+/*header*/
+.header .content{
+    display: flex;
+}
+
+#nav{
+    float: right;
+    padding-top: 60px;
+    padding-right: 30px;
+}
+
+.logo{
+    flex-grow: 1;
+    padding-left: 30px;
+}
+
+#homepage {
+    font-family: "Lucida Console", Monaco, monospace;
+    background-image: url("../images/homepage1.png");
     background-repeat: no-repeat;
     background-size: cover;
-    font-family: "Lucida Console", Monaco, monospace;
+    background-color: black;
 }
 
 /*HOMEPAGE*/
@@ -19,16 +35,12 @@ body {
     padding: 0;
 }
 
-.navbar .container {
-   background-color: #330b1d;
-}
-
 .collapse {
     justify-content: center;
 }
 
 /*logo*/
-#logo {
+#logo, .logo a img{
     height: 150px;
     width: auto;
     margin: 50px 20px 0 20px
@@ -51,12 +63,127 @@ body {
     margin: 0 15px;
 }
 
+
 /*glow*/
 @keyframes neon1 {
   from {
-    text-shadow: 0 0 10px #bc6f00, 0 0 20px #bc6f00, 0 0 30px #bc6f00, 0 0 40px #fbb11e, 0 0 60px #fbb11e, 0 0 70px #ffec7c, 0 0 80px #ffec7c, 0 0 130px #ffec7c;
+    text-shadow: 0 0 5px #bc6f00, 0 0 10px #bc6f00, 0 0 30px #bc6f00, 0 0 30px #fbb11e, 0 0 50px #fbb11e, 0 0 60px #ffec7c, 0 0 70px #ffec7c, 0 0 120px #ffec7c;
   }
   to {
-    text-shadow: 0 0 5px #bc6f00, 0 0 10px #bc6f00, 0 0 15px #bc6f00, 0 0 20px #fbb11e, 0 0 35px #fbb11e, 0 0 40px #ffec7c, 0 0 50px #ffec7c, 0 0 75px #ffec7c;
+    text-shadow: 0 0 3px #bc6f00, 0 0 7px #bc6f00, 0 0 12px #bc6f00, 0 0 17px #fbb11e, 0 0 32px #fbb11e, 0 0 36px #ffec7c, 0 0 45px #ffec7c, 0 0 70px #ffec7c;
   }
 }
+
+/*hraci*/
+#players{
+     background-color: #330b1d;
+    "Lucida Console", Monaco, monospace
+}
+
+#players .container {
+    margin-bottom: 50px;
+}
+
+#players h1 {
+    color: #BE9E25;
+    text-shadow: 1px 1px #ffec7c;
+    letter-spacing: 2px;
+    padding: 0.5em 0;
+}
+
+/*TABULKA*/
+#players .container table{
+    color: #BE9E25;
+    border: 4px solid #705460;
+    width: 100%;
+}
+
+.table_dragon .grid-buttons {
+    width: 50%;
+    float: left;
+    margin-top: 100px;
+}
+
+.table_dragon {
+    width: 100%;
+}
+
+.table_dragon img {
+    height: 150px;
+    width: auto;
+    float: right;
+}
+
+.table_dragon table th {
+    text-transform: uppercase;
+    border-bottom: 4px solid #705460;
+    padding: 10px 5px;
+}
+
+.table_dragon table th:first-child {
+    padding-left: 30px;
+    width: 10%;
+}
+
+.table_dragon table #zlato {
+    width: 25%;
+}
+
+.table_dragon table #zabitia {
+    width: 20%;
+}
+
+.table_dragon table th:last-child {
+    width: 20%;
+}
+
+.table_dragon table tr {
+    padding: 10px;
+    border-bottom: 2px solid #705460;
+}
+
+.table_dragon table tr:last-child {
+    padding: 10px;
+    border-bottom: none;
+}
+
+.table_dragon table td {
+    padding: 10px 5px;
+    color: #ffec7c;
+}
+
+.table_dragon table td:first-child {
+    padding-left: 30px;
+    color: #BE9E25;
+    font-weight: bold;
+}
+
+/*buttons*/
+.btn{
+    margin-right: 20px;
+    float: right;
+}
+
+/*hrac*/
+table tr td a {
+    text-decoration: none;
+    color: #ffec7c;
+}
+
+table tr td a:hover {
+    text-decoration: none;
+    color: #FFF7CA;
+}
+
+#players .col-12 p {
+    color: #ffec7c;
+    font-size: 20px;
+    margin: 0.5rem 0;
+}
+
+#players .col-12 p i {
+    margin-right: 10px;
+}
+
+
+
