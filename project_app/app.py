@@ -39,7 +39,7 @@ def session_add():
 @app.route('/adventure-add', methods=('GET', 'POST'))
 def adventure_add():
     form = AdventureInsertForm.AdventureInsertForm()
-    #  setting default values for from elements
+    #  setting default values for form elements
     form.authors.choices = model.get_pairs("author")
     form.pj.choices = model.get_pairs("player")
     form.location.choices = model.get_pairs("location")
