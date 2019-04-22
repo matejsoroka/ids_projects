@@ -1,8 +1,14 @@
 from flask import Flask, render_template, url_for, redirect
-from model import PlayerInsertForm, AdventureInsertForm, CharacterInsertForm, SessionInsertForm, model
+from model import PlayerInsertForm, AdventureInsertForm, CharacterInsertForm, SessionInsertForm, SignInForm, model
+from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
 model = model.Model()
+
+bcrypt = Bcrypt(app)
+pw_hash = bcrypt.generate_password_hash('hunter2')
+print(pw_hash)
+print(bcrypt.check_password_hash(b'$2b$12$rU0UqvA4yYXtUgQqxAkY7Oxj7rmrvBq0O5phvkKBi/r0DkUzyp/mC', 'hunter2'))
 
 
 @app.route('/')
@@ -105,13 +111,25 @@ def character_add(player_id=1):
     return render_template("character_add.html", form=form)
 
 
-@app.route('/player-add', methods=('GET', 'POST'))
-def player_add():
+@app.route('/sign-up', methods=('GET', 'POST'))
+def sign_up():
     form = PlayerInsertForm.PlayerInsertForm()
     if form.validate_on_submit():
-        model.insert("player", {"name": form.username.data, "gold": form.gold.data, "kills": form.kills.data})
-        return redirect(url_for('players'))
-    return render_template("player_add.html", form=form)
+        model.insert("player", {"name": form.username.data,
+                                "password": bcrypt.generate_password_hash(form.password.data).decode("utf-8"),
+                                "email": form.email.data})
+        return redirect(url_for('/'))
+    return render_template("sign_up.html", form=form)
+
+
+@app.route('/sign-in', methods=('GET', 'POST'))
+def sign_in():
+    form = SignInForm.SignInForm()
+    if form.validate_on_submit():
+        player = model.get_player_by_username(form.username.data)
+        print(bcrypt.check_password_hash(player[5], form.password.data))
+        # return redirect(url_for('/'))
+    return render_template("sign_in.html", form=form)
 
 
 app.config['SECRET_KEY'] = 'foo'

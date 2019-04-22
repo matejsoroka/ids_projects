@@ -173,9 +173,11 @@ END;
 -- CREATING TABLES
 create table player(
   player_id int generated as identity constraint PK_player primary key,
-  name varchar(64),
+  name varchar(64) unique,
   gold int,
-  kills int
+  kills int,
+  email varchar(128),
+  password varchar(128)
 );
 
 create table author(

@@ -57,6 +57,11 @@ class Model:
         self.cursor.execute("SELECT * FROM {} WHERE {}_id={}".format(table, table, id))
         return self.cursor.fetchone()
 
+    def get_player_by_username(self, username):
+        """Gets row from table with specific id (doesn't work when table_name != table_name_id)"""
+        self.cursor.execute("SELECT * FROM player WHERE name='{}'".format(username))
+        return self.cursor.fetchone()
+
     def get_player_characters(self, player_id):
         self.cursor.execute("SELECT CHARACTER.CHARACTER_ID, CHARACTER.NAME, COUNT(*) as adventure_count "
                             "FROM CHARACTER, CHARACTER_ADVENTURE "
