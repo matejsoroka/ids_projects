@@ -1,14 +1,10 @@
-from flask import Flask, render_template, url_for, redirect
+from flask import Flask, flash, render_template, url_for, redirect
 from model import PlayerInsertForm, AdventureInsertForm, CharacterInsertForm, SessionInsertForm, SignInForm, model
 from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
 model = model.Model()
-
 bcrypt = Bcrypt(app)
-pw_hash = bcrypt.generate_password_hash('hunter2')
-print(pw_hash)
-print(bcrypt.check_password_hash(b'$2b$12$rU0UqvA4yYXtUgQqxAkY7Oxj7rmrvBq0O5phvkKBi/r0DkUzyp/mC', 'hunter2'))
 
 
 @app.route('/')
@@ -128,6 +124,7 @@ def sign_in():
     if form.validate_on_submit():
         player = model.get_player_by_username(form.username.data)
         if bcrypt.check_password_hash(player[5], form.password.data):
+            flash('You were successfully logged in', "success")
             return redirect(url_for('index'))
         else:
             form.errors["Validace"] = ["Špatné heslo"]

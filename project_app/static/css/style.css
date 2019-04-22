@@ -1,9 +1,9 @@
-* {
-    color: aliceblue;
-}
-
 body {
     background-color: #330b1d;
+}
+
+.alert {
+    display: none;  /* hiding for animation, sliding back in main.js */
 }
 
 h1 {
