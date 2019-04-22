@@ -127,8 +127,10 @@ def sign_in():
     form = SignInForm.SignInForm()
     if form.validate_on_submit():
         player = model.get_player_by_username(form.username.data)
-        print(bcrypt.check_password_hash(player[5], form.password.data))
-        # return redirect(url_for('/'))
+        if bcrypt.check_password_hash(player[5], form.password.data):
+            return redirect(url_for('index'))
+        else:
+            form.errors["Validace"] = ["Špatné heslo"]
     return render_template("sign_in.html", form=form)
 
 
