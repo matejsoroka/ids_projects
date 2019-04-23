@@ -3,9 +3,12 @@
 {% include "header.html" %}
 <div class="container">
     <div class="row">
+{#        (id 3, 'Gibblegill', 'Orc', level 5, player_id 2, 'Matej', 'Gnome', 'images/race/gnome.png') #}
         <h1 class="col-12 text-center">{{ character[1] }} {{ character[0] }}</h1>
-        <h2 class="col-12 text-center">{{ character[2] }}</h2>
+        <h2 class="col-12 text-center">{{ character[2] }} - {{ character[6] }}</h2>
         <h3 class="col-12 text-center">{{ character[3] }}</h3>
+        <h3 class="col-12 text-center"><a href="/player/{{ character[4] }}">{{ character[5] }}</a></h3>
+        <img src="{{ character[7] }}" alt={{ character[1] }}"">
     </div>
 </div>
 {% endblock %}

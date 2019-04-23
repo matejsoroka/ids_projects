@@ -90,3 +90,13 @@ class Model:
                             'ALL (SELECT max(CHARACTER."level") '
                             'from CHARACTER where CHARACTER.player_id = {})'.format(player_id))
         return self.cursor.fetchone()
+
+    def get_character(self, player_id):
+        self.cursor.execute('SELECT CHARACTER_ID, CHARACTER.NAME as character_name, CHARACTER.class, '
+                            'character."level", PLAYER.PLAYER_ID as player_id , PLAYER.NAME as player_name, '
+                            'RACE.NAME as race_name, RACE.IMAGE '
+                            'FROM CHARACTER '
+                            'join RACE on CHARACTER.CHARACTER_ID = RACE.RACE_ID '
+                            'join PLAYER on CHARACTER.PLAYER_ID = PLAYER.PLAYER_ID '
+                            'WHERE CHARACTER_ID = {}'.format(player_id))
+        return self.cursor.fetchone()

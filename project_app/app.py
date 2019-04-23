@@ -144,7 +144,8 @@ def player(player_id):
 @app.route('/character/<character_id>')
 @login_required
 def character(character_id):
-    return render_template("character.html", character=model.get_row("character", character_id))
+    print(model.get_character(character_id))
+    return render_template("character.html", character=model.get_character(character_id))
 
 
 @app.route('/character-add/', methods=('GET', 'POST'))
