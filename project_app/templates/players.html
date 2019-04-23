@@ -28,7 +28,9 @@
                         <td>{{ player[2] }}</td>
                         <td>{{ player[3] }}</td>
                         <td>
+                            {% if current_user["role"] == "admin" %}
                             <a class="btn btn-sm btn-danger" href="/delete-player/{{ player[0] }}"><i class="fa fa-trash"></i></a>
+                            {% endif %}
                             <a class="btn btn-sm btn-primary" href="/player/{{ player[0] }}"><i class="fa fa-eye"></i></a>
                         </td>
                     </tr>

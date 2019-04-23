@@ -6,6 +6,11 @@
         <h1 class="col-12 text-center">{% block title %}{{ player[1] }}{% endblock %} {{ player[0] }}</h1>
         <div class="col-12">
             <p class="text-center">{{ player[2] }} <i class="fa fa-coins"></i> {{ player[3] }} <i class="fa fa-skull-crossbones"></i></p>
+            {{ current_user["id"] }}
+            {{ player[0] }}
+            {% if current_user["id"] | int == player[0] | int %}
+            <a class="btn btn-xs btn-danger" href="/delete-myself"><i class="fa fa-minus-circle"></i> Odstranit vlastni postavu</a>
+            {% endif %}
         </div>
     </div>
     <div class="row">

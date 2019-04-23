@@ -1,7 +1,7 @@
 from flask import Flask, flash, render_template, url_for, redirect
 from model import PlayerInsertForm, AdventureInsertForm, CharacterInsertForm, SessionInsertForm, SignInForm, model, User
 from flask_bcrypt import Bcrypt
-from flask_login import LoginManager, login_required, login_user, logout_user
+from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 
 app = Flask(__name__)
 model = model.Model()
@@ -11,8 +11,6 @@ bcrypt = Bcrypt(app)
 app.config.update(
     SECRET_KEY='foo'
 )
-
-users = [User.User(id[0]) for id in model.get_player_ids()]
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -115,8 +113,22 @@ def unauthorized():
 @app.route('/delete-player/<player_id>')
 @login_required
 def delete_player(player_id):
-    model.delete_row("player", player_id)
-    return redirect(url_for('players'))
+    if current_user["role"] == "admin":
+        model.delete_row("player", player_id)
+        return redirect(url_for('players'))
+    else:
+        flash("Na tuto operaci nemate opravneni", "danger")
+        return redirect(url_for('index'))
+
+
+@app.route('/delete-myself/')
+@login_required
+def delete_acc():
+    user_id = current_user.get_id()
+    model.delete_row("player", user_id)
+    logout_user()
+    flash("Uzivatel by uspesne smazan", "success")
+    return redirect(url_for('sign_in'))
 
 
 @app.route('/player/<player_id>')
@@ -154,12 +166,13 @@ def sign_up():
         model.insert("player", {"name": form.username.data,
                                 "password": bcrypt.generate_password_hash(form.password.data).decode("utf-8"),
                                 "email": form.email.data})
-        return redirect(url_for('/'))
+        return redirect(url_for('index'))
     return render_template("sign_up.html", form=form)
 
 
 @app.route('/sign-in', methods=('GET', 'POST'))
 def sign_in():
+    print(current_user)
     form = SignInForm.SignInForm()
     if form.validate_on_submit():
         player = model.get_player_by_username(form.username.data)

@@ -177,7 +177,8 @@ create table player(
   gold int,
   kills int,
   email varchar(128),
-  password varchar(128)
+  password varchar(128),
+  role varchar(10)
 );
 
 create table author(
