@@ -136,7 +136,9 @@ def delete_acc():
 def player(player_id):
     player_data = model.get_row("player", player_id)
     character_data = model.get_player_characters(player_id)
-    return render_template("player.html", player=player_data, characters=character_data)
+    champ = model.get_player_best_character(player_id)
+    print(champ)
+    return render_template("player.html", player=player_data, characters=character_data, champ=champ)
 
 
 @app.route('/character/<character_id>')

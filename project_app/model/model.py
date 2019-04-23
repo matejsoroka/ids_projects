@@ -80,3 +80,13 @@ class Model:
         """Removes row from table with specific id (doesn't work when table_name != table_name_id)"""
         self.cursor.execute("DELETE FROM {} WHERE {}_id={}".format(table, table, id))
         self.db.commit()
+
+    def get_player_best_character(self, player_id):
+        self.cursor.execute('SELECT CHARACTER.name as character_name, CHARACTER."level", RACE.NAME as race_name, RACE.IMAGE '
+                            'from CHARACTER '
+                            'join PLAYER on CHARACTER.player_id = PLAYER.player_id '
+                            'join RACE on CHARACTER.RACE_ID = race.RACE_ID '
+                            'where CHARACTER."level" = '
+                            'ALL (SELECT max(CHARACTER."level") '
+                            'from CHARACTER where CHARACTER.player_id = {})'.format(player_id))
+        return self.cursor.fetchone()
