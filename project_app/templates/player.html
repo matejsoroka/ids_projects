@@ -13,10 +13,12 @@
     </div>
     <div class="row">
         <div class="col-6">
+            {% if champ %}
 {#            ('Ocean Almondflame', 6, 'Dwarf', 'images/race/dwarf.png')   #}
             <h2>{{ champ[0] }} ({{ champ[1] }})</h2>
             <h3>{{ champ[2] }}</h3>
             <img src="{{ champ[3] }}" alt="{{ champ[0] }}">
+            {% endif %}
         </div>
         <div class="col-6">
             <div class="table_dragon">
