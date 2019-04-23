@@ -9,6 +9,7 @@ body {
 h1 {
     padding: 1em 0;
     text-transform: uppercase;
+    color: whitesmoke;
 }
 
 .grid-buttons {

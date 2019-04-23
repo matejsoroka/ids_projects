@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-{% include "header.html" %}
     <div class="container">
         <h1 class="text-center">{% block title %}Přihlášení{% endblock %}</h1>
         <form method="POST" enctype="multipart/form-data">
@@ -20,7 +19,8 @@
                 {{ form.password.label }}
                 {{ form.password(class_="form-control") }}
             </div>
-            <input type="submit" value="Add" class="btn btn-primary"/>
+            <input type="submit" value="Add" class="btn btn-success"/>
+            <a href="/sign-up" class="btn btn-primary">Registrace</a>
         </form>
     </div>
 {% endblock %}

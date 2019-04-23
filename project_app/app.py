@@ -1,28 +1,56 @@
 from flask import Flask, flash, render_template, url_for, redirect
-from model import PlayerInsertForm, AdventureInsertForm, CharacterInsertForm, SessionInsertForm, SignInForm, model
+from model import PlayerInsertForm, AdventureInsertForm, CharacterInsertForm, SessionInsertForm, SignInForm, model, User
 from flask_bcrypt import Bcrypt
+from flask_login import LoginManager, login_required, login_user, logout_user
 
 app = Flask(__name__)
 model = model.Model()
 bcrypt = Bcrypt(app)
 
+# config
+app.config.update(
+    SECRET_KEY='foo'
+)
+
+users = [User.User(id[0]) for id in model.get_player_ids()]
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.User(user_id) if model.get_row("player", user_id) else None
+
 
 @app.route('/')
+@login_required
 def index():
     return render_template("index.html")
 
 
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
+
+
 @app.route('/adventures')
+@login_required
 def adventures():
     return render_template("adventures.html", adventures=model.get_table("adventure"))
 
 
 @app.route('/sessions')
+@login_required
 def sessions():
     return render_template("sessions.html", adventures=model.get_table("sessions"))
 
 
 @app.route('/session-add', methods=('GET', 'POST'))
+@login_required
 def session_add():
     form = SessionInsertForm.SessionInsertForm()
     #  setting default values for from elements
@@ -39,6 +67,7 @@ def session_add():
 
 
 @app.route('/adventure-add', methods=('GET', 'POST'))
+@login_required
 def adventure_add():
     form = AdventureInsertForm.AdventureInsertForm()
     #  setting default values for form elements
@@ -64,6 +93,7 @@ def adventure_add():
 
 
 @app.route('/delete-adventure/<adventure_id>')
+@login_required
 def delete_adventure(adventure_id):
     model.delete_row('adventure', adventure_id)
     model.db.commit()
@@ -71,17 +101,26 @@ def delete_adventure(adventure_id):
 
 
 @app.route('/players')
+@login_required
 def players():
     return render_template("players.html", players=model.get_table("player"))
 
 
+@login_manager.unauthorized_handler
+def unauthorized():
+    flash("Prosím přihlaste se.", "warning")
+    return redirect(url_for('sign_in'))
+
+
 @app.route('/delete-player/<player_id>')
+@login_required
 def delete_player(player_id):
     model.delete_row("player", player_id)
     return redirect(url_for('players'))
 
 
 @app.route('/player/<player_id>')
+@login_required
 def player(player_id):
     player_data = model.get_row("player", player_id)
     character_data = model.get_player_characters(player_id)
@@ -89,6 +128,7 @@ def player(player_id):
 
 
 @app.route('/character/<character_id>')
+@login_required
 def character(character_id):
     return render_template("character.html", character=model.get_row("character", character_id))
 
@@ -123,15 +163,19 @@ def sign_in():
     form = SignInForm.SignInForm()
     if form.validate_on_submit():
         player = model.get_player_by_username(form.username.data)
-        if bcrypt.check_password_hash(player[5], form.password.data):
-            flash('You were successfully logged in', "success")
-            return redirect(url_for('index'))
+        if player:
+            if bcrypt.check_password_hash(player[5], form.password.data):
+                user = User.User(player[0])
+                login_user(user)
+                flash('You were successfully logged in', "success")
+                return redirect(url_for('index'))
+            else:
+                form.errors["Validace"] = ["Špatné heslo"]
         else:
-            form.errors["Validace"] = ["Špatné heslo"]
+            form.errors["Validace"] = ["Špatné přihlasovací jméno"]
+
     return render_template("sign_in.html", form=form)
 
-
-app.config['SECRET_KEY'] = 'foo'
 
 if __name__ == '__main__':
     app.run()

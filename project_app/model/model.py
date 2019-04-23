@@ -55,7 +55,8 @@ class Model:
     def get_row(self, table, id):
         """Gets row from table with specific id (doesn't work when table_name != table_name_id)"""
         self.cursor.execute("SELECT * FROM {} WHERE {}_id={}".format(table, table, id))
-        return self.cursor.fetchone()
+        row = self.cursor.fetchone()
+        return row if row else None
 
     def get_player_by_username(self, username):
         """Gets row from table with specific id (doesn't work when table_name != table_name_id)"""
@@ -69,6 +70,10 @@ class Model:
                             "CHARACTER_ADVENTURE.CHARACTER_ID = CHARACTER.CHARACTER_ID "
                             "GROUP BY CHARACTER.CHARACTER_ID, CHARACTER.NAME "
                             "ORDER BY adventure_count DESC".format(player_id))
+        return self.cursor.fetchall()
+
+    def get_player_ids(self):
+        self.cursor.execute("SELECT player_id FROM player")
         return self.cursor.fetchall()
 
     def delete_row(self, table, id):
