@@ -137,14 +137,12 @@ def player(player_id):
     player_data = model.get_row("player", player_id)
     character_data = model.get_player_characters(player_id)
     champ = model.get_player_best_character(player_id)
-    print(champ)
     return render_template("player.html", player=player_data, characters=character_data, champ=champ)
 
 
 @app.route('/character/<character_id>')
 @login_required
 def character(character_id):
-    print(model.get_character(character_id))
     return render_template("character.html", character=model.get_character(character_id))
 
 
@@ -175,7 +173,6 @@ def sign_up():
 
 @app.route('/sign-in', methods=('GET', 'POST'))
 def sign_in():
-    print(current_user)
     form = SignInForm.SignInForm()
     if form.validate_on_submit():
         player = model.get_player_by_username(form.username.data)
