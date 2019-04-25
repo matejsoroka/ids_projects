@@ -12,6 +12,13 @@ h1 {
     color: whitesmoke;
 }
 
+#banner {
+    width: 100%;
+    position:fixed;
+    bottom: 0;
+}
+
+
 .grid-buttons {
     margin: 1em 0;
 }
@@ -34,10 +41,6 @@ h1 {
 
 #homepage {
     font-family: "Lucida Console", Monaco, monospace;
-    background-image: url("../images/homepage1.png");
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-color: black;
 }
 
 /*HOMEPAGE*/
