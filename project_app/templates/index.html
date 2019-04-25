@@ -1,7 +1,29 @@
 {% extends "base.html" %}
 {% block content %}
-{% include "header.html" %}
 <div id="homepage">
-    <img id="banner" src="/static/images/homepage1.png" alt="Man on the cliff">
+    <header>
+        <nav class="main-menu" id="navbar">
+                <ul>
+                    <li>
+                        <a class="nav-link" href="/players">Hráči</a>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="/adventures">Dobrodružství</a>
+                    </li>
+                </ul>
+                    <a href="/">
+                        <img id="logo" src="../static/images/logo.png">
+                    </a>
+                <ul>
+                    <li>
+                        <a class="nav-link" href="/sessions">Sezení</a>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="/sessions">Odhlásit se</a>
+                    </li>
+                </ul>
+        </nav>
+    </header>
+     <img id="banner" src="/static/images/homepage1.png" alt="Man on the cliff">
 </div>
 {% endblock %}

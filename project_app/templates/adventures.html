@@ -1,33 +1,40 @@
 {% extends "base.html" %}
 {% block content %}
 {% include "header.html" %}
-<div class="container">
-    <h1 class="text-center">Adventures</h1>
-    <div class="row grid-buttons">
-        <div class="col4">
-            <a href="/adventure-add" class="btn btn-success"><i class="fa fa-plus-circle"></i> Add adventure</a>
+<div id="players">
+    <div class="container">
+        <h1 class="text-center">Dobrodružství</h1>
+        <div class="table_dragon">
+            <div class="row grid-buttons">
+                <div class="col4">
+                    <a href="/adventure-add" class="btn btn-success"><i class="fa fa-plus-circle"></i> Přidat dobrodružství </a>
+                </div>
+            </div>
+
+            <img src="../static/images/d7.png" alt="drak">
+
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>Cíl</th>
+                    <th>Obtížnost</th>
+                    <th></th>
+                </tr>
+                {% for adventure in adventures %}
+                <tr>
+                    <td>{{ adventure[0] }}</td>
+                    <td>{{ adventure[1] }}</td>
+                    <td>{{ adventure[2] }}</td>
+                    <td>
+                        <a class="btn btn-sm btn-primary" href="/adventure/{{ adventure[0] }}"><i class="fa fa-eye"></i></a>
+                        {% if current_user["role"] == "admin" %}
+                        <a class="btn btn-sm btn-danger" href="/delete-adventure/{{ adventure[0] }}"><i class="fa fa-trash"></i></a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
         </div>
     </div>
-    <table class="table">
-        <tr>
-            <th>ID</th>
-            <th>Objective</th>
-            <th>Difficulty</th>
-            <th></th>
-        </tr>
-        {% for adventure in adventures %}
-        <tr>
-            <td>{{ adventure[0] }}</td>
-            <td>{{ adventure[1] }}</td>
-            <td>{{ adventure[2] }}</td>
-            <td>
-                <a class="btn btn-sm btn-primary" href="/adventure/{{ adventure[0] }}"><i class="fa fa-eye"></i></a>
-                {% if current_user["role"] == "admin" %}
-                <a class="btn btn-sm btn-danger" href="/delete-adventure/{{ adventure[0] }}"><i class="fa fa-trash"></i></a>
-                {% endif %}
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
-</div>
+ </div>
 {% endblock %}

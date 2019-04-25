@@ -1,10 +1,22 @@
+@font-face {
+    font-family: "Lato Light";
+    src: url("Lato-Light.ttf");
+}
+
+@font-face {
+    font-family: "Lato Regular";
+    src: url("Lato-Regular.ttf");
+}
+
 body {
     background-color: #330b1d;
+    font-family: "Lato Light";
 }
 
 .alert {
     display: none;  /* hiding for animation, sliding back in main.js */
 }
+
 
 h1 {
     padding: 1em 0;
@@ -18,7 +30,6 @@ h1 {
     bottom: 0;
 }
 
-
 .grid-buttons {
     margin: 1em 0;
 }
@@ -28,30 +39,15 @@ h1 {
     display: flex;
 }
 
-#nav{
-    float: right;
-    padding-top: 60px;
-    padding-right: 30px;
-}
-
 .logo{
     flex-grow: 1;
-    padding-left: 30px;
-}
-
-#homepage {
-    font-family: "Lucida Console", Monaco, monospace;
+    padding-right: 200px;
 }
 
 /*HOMEPAGE*/
-.navbar {
-    padding: 0;
+header {
+    text-align: center;
 }
-
-.collapse {
-    justify-content: center;
-}
-
 /*logo*/
 #logo, .logo a img{
     height: 150px;
@@ -59,8 +55,12 @@ h1 {
     margin: 50px 20px 0 20px
 }
 
-/*nav*/
-.navbar-nav .nav-link {
+ /*nav*/
+.main-menu ul li {
+    padding: 10px 0;
+}
+
+.main-menu .nav-link {
     color: #e2c624;
     text-transform: uppercase;
     font-size: 20px;
@@ -68,14 +68,33 @@ h1 {
     animation: neon1 1.5s ease-in-out infinite alternate;
 }
 
-.navbar-nav {
+.main-menu {
     margin-top: 35px;
+    display: inline-flex;
+}
+
+.main-menu ul{
+    padding-top: 90px;
+    display: inline-flex;
+    padding-left: 0;
+    list-style-type: none;
 }
 
 .nav-item{
     margin: 0 15px;
 }
 
+/*MENU Z HEADER*/
+.header-menu {
+    padding: 90px 150px 0 0;
+    margin: 0;
+    float: right;
+}
+
+.header-menu ul {
+    padding: 0;
+    margin: 0;
+}
 
 /*glow*/
 @keyframes neon1 {
@@ -90,7 +109,6 @@ h1 {
 /*hraci*/
 #players{
      background-color: #330b1d;
-    "Lucida Console", Monaco, monospace
 }
 
 #players.container {
@@ -168,7 +186,7 @@ h1 {
 .table_dragon table td:first-child {
     padding-left: 30px;
     color: #BE9E25;
-    font-weight: bold;
+    font-family: "Lato Regular";
 }
 
 /*buttons*/
@@ -197,6 +215,7 @@ table tr td a:hover {
 #players .col-12 p i {
     margin-right: 10px;
 }
+
 
 
 
