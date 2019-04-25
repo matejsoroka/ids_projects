@@ -85,8 +85,8 @@ def session_add():
         adventure_insert = {"date": form.date.data, "place": form.place.data, "moderator": form.moderator.data}
         model.insert("sessions", adventure_insert)
         session_id = model.get_last_id("sessions")
-        for adventure in form.adventures.data:
-            model.insert("adventure_session", {"adventure_id": adventure, "session_id": session_id})
+        for adv in form.adventures.data:
+            model.insert("adventure_session", {"adventure_id": adv, "session_id": session_id})
         return redirect(url_for('adventures'))
     return render_template("session_add.html", form=form)
 
@@ -110,8 +110,8 @@ def adventure_add():
         adventure_id = model.get_last_id("adventure")
         for author in form.authors.data:
             model.insert("adventure_author", {"adventure_id": adventure_id, "author_id": author})
-        for character in form.characters.data:
-            model.insert("character_adventure", {"adventure_id": adventure_id, "character_id": character})
+        for char in form.characters.data:
+            model.insert("character_adventure", {"adventure_id": adventure_id, "character_id": char})
         for game_element in form.game_elements.data:
             model.insert("adventure_game_element", {"adventure_id": adventure_id, "game_element": game_element})
         return redirect(url_for('adventures'))
@@ -165,9 +165,8 @@ def player(player_id):
     player_data = model.get_row("player", player_id)
     character_data = model.get_player_characters(player_id)
     champ = model.get_player_best_character(player_id)
-    adventures = model.get_pjs_adventures(player_id)
-    return render_template("player.html", player=player_data, characters=character_data, champ=champ,
-                           adventures=adventures)
+    adv = model.get_pjs_adventures(player_id)
+    return render_template("player.html", player=player_data, characters=character_data, champ=champ, adventures=adv)
 
 
 @app.route('/character/<character_id>')
@@ -205,10 +204,10 @@ def sign_up():
 def sign_in():
     form = SignInForm.SignInForm()
     if form.validate_on_submit():
-        player = model.get_player_by_username(form.username.data)
-        if player:
-            if bcrypt.check_password_hash(player[5], form.password.data):
-                user = User.User(player[0])
+        data = model.get_player_by_username(form.username.data)
+        if data:
+            if bcrypt.check_password_hash(data[5], form.password.data):
+                user = User.User(data[0])
                 login_user(user)
                 flash('You were successfully logged in', "success")
                 return redirect(url_for('index'))
