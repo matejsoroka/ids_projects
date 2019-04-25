@@ -113,3 +113,21 @@ class Model:
             'SELECT a.adventure_id, a.objective FROM ADVENTURE a, ADVENTURE_SESSION ads, SESSIONS s '
             'WHERE s.session_id=ads.session_id AND a.adventure_id=ads.adventure_id AND s.session_id={}'.format(session_id))
         return self.cursor.fetchall()
+
+    def get_adventure(self, adventure_id):
+        self.cursor.execute(
+            'SELECT a.ADVENTURE_ID, a.OBJECTIVE, a.DIFFICULTY, l.NAME, p.player_id, p.name '
+            'FROM ADVENTURE a, LOCATION l, PLAYER p '
+            'WHERE l.LOCATION_ID=a.LOCATION_ID AND a.PJ_ID=p.PLAYER_ID AND a.ADVENTURE_ID = {}'.format(adventure_id))
+        return self.cursor.fetchone()
+
+    def get_adventure_characters(self, adventure_id):
+        self.cursor.execute(
+            'SELECT c.character_id, c.name '
+            'FROM ADVENTURE a, CHARACTER c, CHARACTER_ADVENTURE ca '
+            'WHERE a.adventure_id=ca.adventure_id AND c.character_id=ca.character_id AND a.adventure_id={}'.format(adventure_id))
+        return self.cursor.fetchall()
+
+    def get_pjs_adventures(self, player_id):
+        self.cursor.execute('SELECT a.adventure_id, a.objective FROM ADVENTURE a WHERE a.PJ_ID = {}'.format(player_id))
+        return self.cursor.fetchall()

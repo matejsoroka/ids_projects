@@ -7,12 +7,13 @@
         <div class="col-12">
             <p class="text-center">{{ player[2] }} <i class="fa fa-coins"></i> {{ player[3] }} <i class="fa fa-skull-crossbones"></i></p>
             {% if current_user["id"] | int == player[0] | int %}
-            <a class="btn btn-xs btn-danger" href="/delete-myself"><i class="fa fa-minus-circle"></i> Odstranit vlastni postavu</a>
+            <a class="btn btn-xs btn-danger" href="/delete-myself"><i class="fa fa-minus-circle"></i> Odstranit ucet</a>
             {% endif %}
         </div>
     </div>
     <div class="row">
-        <div class="col-6">
+
+        <div class="col-4">
             {% if champ %}
 {#            ('Ocean Almondflame', 6, 'Dwarf', 'images/race/dwarf.png')   #}
             <h2>{{ champ[0] }} ({{ champ[1] }})</h2>
@@ -20,7 +21,28 @@
             <img src="{{ champ[3] }}" alt="{{ champ[0] }}">
             {% endif %}
         </div>
-        <div class="col-6">
+
+        <div class="col-4">
+            <table class="table">
+                <tr>
+                    <th>PJ in</th>
+                    <th></th>
+                </tr>
+{#              (ad_id: 1, ad_objective: 'Kill dragon')#}
+                {% for adventure in adventures %}
+                <tr>
+                    <td>
+                        <a href="/adventure/{{ adventure[0] }}">
+                           {{ adventure[1] }}
+                        </a>
+                    </td>
+                    <td></td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <div class="col-4">
             <div class="table_dragon">
                 <div class="row grid-buttons buttons">
                     <div class="col4">

@@ -41,6 +41,15 @@ def adventures():
     return render_template("adventures.html", adventures=model.get_table("adventure"))
 
 
+@app.route('/adventure/<adventure_id>')
+@login_required
+def adventure(adventure_id):
+    print(model.get_adventure(adventure_id))
+    print(model.get_adventure_characters(adventure_id))
+    return render_template("adventure.html", adventure=model.get_adventure(adventure_id),
+                           characters=model.get_adventure_characters(adventure_id))
+
+
 @app.route('/sessions')
 @login_required
 def sessions():
@@ -50,8 +59,6 @@ def sessions():
 @app.route('/session/<session_id>')
 @login_required
 def session(session_id):
-    print(model.get_session(session_id))
-    print(model.get_session_adventures(session_id))
     return render_template("session.html", session=model.get_session(session_id),
                            adventures=model.get_session_adventures(session_id))
 
@@ -61,7 +68,6 @@ def session(session_id):
 def session_add():
     form = SessionInsertForm.SessionInsertForm()
     #  setting default values for from elements
-    print(model.get_pairs("adventure"))
     form.adventures.choices = model.get_pairs("adventure")
 
     if form.validate_on_submit():  # on form submit
@@ -147,7 +153,9 @@ def player(player_id):
     player_data = model.get_row("player", player_id)
     character_data = model.get_player_characters(player_id)
     champ = model.get_player_best_character(player_id)
-    return render_template("player.html", player=player_data, characters=character_data, champ=champ)
+    adventures = model.get_pjs_adventures(player_id)
+    return render_template("player.html", player=player_data, characters=character_data, champ=champ,
+                           adventures=adventures)
 
 
 @app.route('/character/<character_id>')

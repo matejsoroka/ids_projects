@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+{% include "header.html" %}
+<div class="container">
+    <div class="row">
+        {# ([0]advneture_id: 2, [1]objective: 'Kill the Smorg', [2]difficulty: 4, [3]locality: 'Forgotten dungeon', [4]PJ_id: 2, [5]Pj: 'Matej') #}
+        <h1 class="col-12 text-center">{% block title %}{{ adventure[1] }}{% endblock %} (diff: {{ adventure[2] }})</h1>
+        <h2 class="col-12 text-center">{{ adventure[3] }}</h2>
+        <h3 class="col-12 text-center">PJ: <a href="/player/{{ adventure[4] }}">{{ adventure[5] }}</a></h3>
+        {# [(3, 'Gibblegill')] #}
+        <table class="table">
+            <tr>
+                <th>Postavy</th>
+                <th></th>
+            </tr>
+            {% for character in characters %}
+            <tr>
+                <td>
+                    <a href="/character/{{ character[0] }}">
+                       {{ character[1] }}
+                    </a>
+                </td>
+                <td></td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+{% endblock %}
