@@ -44,8 +44,6 @@ def adventures():
 @app.route('/adventure/<adventure_id>')
 @login_required
 def adventure(adventure_id):
-    print(model.get_adventure(adventure_id))
-    print(model.get_adventure_characters(adventure_id))
     return render_template("adventure.html", adventure=model.get_adventure(adventure_id),
                            characters=model.get_adventure_characters(adventure_id))
 
