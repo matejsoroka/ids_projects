@@ -7,6 +7,17 @@ app = Flask(__name__)
 model = model.Model()
 bcrypt = Bcrypt(app)
 
+
+# TODO: Password input as **** not string
+# TODO: Password input as **** not string [sign-in.html]
+# TODO: Alert on delete buttons
+# TODO: Player design
+# TODO: Adventure design
+# TODO: Session design
+# TODO: All tables and minitables design
+# TODO: All forms design, [*_add.html]
+
+
 # config
 app.config.update(
     SECRET_KEY='foo'
