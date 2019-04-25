@@ -78,9 +78,11 @@ def session_add():
     form = SessionInsertForm.SessionInsertForm()
     #  setting default values for from elements
     form.adventures.choices = model.get_pairs("adventure")
+    form.moderator.choices = model.get_pairs("player")
+    form.moderator.process_data(current_user.get_id())
 
     if form.validate_on_submit():  # on form submit
-        adventure_insert = {"date": form.date.data, "place": form.place.data}
+        adventure_insert = {"date": form.date.data, "place": form.place.data, "moderator": form.moderator.data}
         model.insert("sessions", adventure_insert)
         session_id = model.get_last_id("sessions")
         for adventure in form.adventures.data:
@@ -99,6 +101,7 @@ def adventure_add():
     form.location.choices = model.get_pairs("location")
     form.game_elements.choices = model.get_pairs("game_element")
     form.characters.choices = model.get_pairs("character")
+    form.pj.process_data(current_user.get_id())
 
     if form.validate_on_submit():  # on form submit
         adventure_insert = {"objective": form.objective.data, "difficulty": form.difficulty.data, "PJ_ID": form.pj.data,

@@ -22,7 +22,11 @@
             </div>
             <div class="form-group">
                 {{ form.pj.label }}
+                {% if current_user["role"] == "admin" %}
                 {{ form.pj(class_="form-control") }}
+                {% else %}
+                {{ form.pj(class_="form-control", disabled=True) }}
+                {% endif %}
             </div>
             <div class="form-group">
                 {{ form.location.label }}
