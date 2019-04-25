@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+{% include "header.html" %}
+<div class="container" id="players">
+{#    session_id: 1, Place: ('The Black Cat', date: datetime.datetime(2019, 5, 3, 0, 0), Moderator_id: 1, Moderator: 'Alex')#}
+    <div class="row">
+        <h1 class="col-12 text-center">{% block title %}{{ session[1] }}{% endblock %}</h1>
+        <h2 class="col-12 text-center">{{ session[2] }}</h2>
+        <h3 class="col-12 text-center"><a href="/player/{{ session[3] }}">{{ session[4] }}</a></h3>
+        <div class="col-12">
+            {% if current_user["id"] | int == session[3] | int %}
+            <a class="btn btn-xs btn-danger" href="/delete-session/{{ session[0] }}"><i class="fa fa-minus-circle"></i> Odstranit sezení</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="table_dragon">
+                <img src="../static/images/d6.png">
+                <table>
+                    <tr>
+                        <th>Dobrodružství v sezení</th>
+                        <th></th>
+                    </tr>
+{#                    (ad_id: 1, ad_objective: 'Kill dragon')#}
+                    {% for adventure in adventures %}
+                    <tr>
+                        <td>
+                            <a href="/adventure/{{ adventure[0] }}">
+                               {{ adventure[1] }}
+                            </a>
+                        </td>
+                        <td></td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

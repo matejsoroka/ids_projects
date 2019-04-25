@@ -100,3 +100,16 @@ class Model:
                             'join PLAYER on CHARACTER.PLAYER_ID = PLAYER.PLAYER_ID '
                             'WHERE CHARACTER_ID = {}'.format(player_id))
         return self.cursor.fetchone()
+
+    def get_session(self, session_id):
+        self.cursor.execute(
+            'SELECT SESSIONS.session_id, SESSIONS.place, SESSIONS."date", SESSIONS.moderator, PLAYER.name FROM SESSIONS '
+            'join PLAYER on SESSIONS.moderator = PLAYER.player_id '
+            'where PLAYER.player_id = SESSIONS.moderator AND SESSIONS.session_id={}'.format(session_id))
+        return self.cursor.fetchone()
+
+    def get_session_adventures(self, session_id):
+        self.cursor.execute(
+            'SELECT a.adventure_id, a.objective FROM ADVENTURE a, ADVENTURE_SESSION ads, SESSIONS s '
+            'WHERE s.session_id=ads.session_id AND a.adventure_id=ads.adventure_id AND s.session_id={}'.format(session_id))
+        return self.cursor.fetchall()

@@ -18,8 +18,8 @@
         {% for adventure in adventures %}
         <tr>
             <td>{{ adventure[0] }}</td>
-            <td>{{ adventure[2] }}</td>
             <td>{{ adventure[1] }}</td>
+            <td>{{ adventure[2] }}</td>
             <td>
                 <a class="btn btn-sm btn-primary" href="/adventure/{{ adventure[0] }}"><i class="fa fa-eye"></i></a>
                 {% if current_user["role"] == "admin" %}

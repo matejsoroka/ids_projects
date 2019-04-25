@@ -44,7 +44,16 @@ def adventures():
 @app.route('/sessions')
 @login_required
 def sessions():
-    return render_template("sessions.html", adventures=model.get_table("sessions"))
+    return render_template("sessions.html", sessions=model.get_table("sessions"))
+
+
+@app.route('/session/<session_id>')
+@login_required
+def session(session_id):
+    print(model.get_session(session_id))
+    print(model.get_session_adventures(session_id))
+    return render_template("session.html", session=model.get_session(session_id),
+                           adventures=model.get_session_adventures(session_id))
 
 
 @app.route('/session-add', methods=('GET', 'POST'))
@@ -52,6 +61,7 @@ def sessions():
 def session_add():
     form = SessionInsertForm.SessionInsertForm()
     #  setting default values for from elements
+    print(model.get_pairs("adventure"))
     form.adventures.choices = model.get_pairs("adventure")
 
     if form.validate_on_submit():  # on form submit
