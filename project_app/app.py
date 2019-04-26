@@ -11,10 +11,6 @@ bcrypt = Bcrypt(app)
 # TODO: Password input as **** not string
 # TODO: Password input as **** not string [sign-in.html]
 # TODO: Alert on delete buttons
-# TODO: Player design
-# TODO: Adventure design
-# TODO: Session design
-# TODO: All tables and minitables design
 # TODO: All forms design, [*_add.html]
 
 
@@ -134,7 +130,7 @@ def players():
 
 @login_manager.unauthorized_handler
 def unauthorized():
-    flash("Prosím přihlaste se.", "warning")
+    flash("Prosím, přihlaste se", "warning")
     return redirect(url_for('sign_in'))
 
 
@@ -145,7 +141,7 @@ def delete_player(player_id):
         model.delete_row("player", player_id)
         return redirect(url_for('players'))
     else:
-        flash("Na tuto operaci nemate opravneni", "danger")
+        flash("Na tuto operaci nemáte oprávnění", "danger")
         return redirect(url_for('index'))
 
 
@@ -155,7 +151,7 @@ def delete_acc():
     user_id = current_user.get_id()
     model.delete_row("player", user_id)
     logout_user()
-    flash("Uzivatel by uspesne smazan", "success")
+    flash("Užívatel byl uspěšně smazán", "success")
     return redirect(url_for('sign_in'))
 
 
@@ -210,7 +206,7 @@ def sign_in():
             if bcrypt.check_password_hash(player[5], form.password.data):
                 user = User.User(player[0])
                 login_user(user)
-                flash('You were successfully logged in', "success")
+                flash('Úspěšně ste se přihlásily', "success")
                 return redirect(url_for('index'))
             else:
                 form.errors["Validace"] = ["Špatné heslo"]

@@ -1,71 +1,79 @@
 {% extends 'base.html' %}
 {% block content %}
-{% include "header.html" %}
 <div class="container" id="players">
-    <div class="row">
-        <h1 class="col-12 text-center">{% block title %}{{ player[1] }}{% endblock %} {{ player[0] }}</h1>
-        <div class="col-12">
+    {% include "header.html" %}
+    <div class="row player">
+        <h1 class="col-12 text-center title">{% block title %}{{ player[1] }}{% endblock %} {{ player[0] }}</h1>
+
+        <div class="col-12 money-money">
             <p class="text-center">{{ player[2] }} <i class="fa fa-coins"></i> {{ player[3] }} <i class="fa fa-skull-crossbones"></i></p>
-            {% if current_user["id"] | int == player[0] | int %}
-            <a class="btn btn-xs btn-danger" href="/delete-myself"><i class="fa fa-minus-circle"></i> Odstranit ucet</a>
-            {% endif %}
         </div>
+
+        {% if current_user["id"] | int == player[0] | int %}
+        <div class="text-center col-12 button-delete">
+            <a class="btn btn-xs btn-danger" href="/delete-myself"><i class="fa fa-minus-circle"></i> Odstránit účet</a>
+        </div>
+        {% endif %}
+
     </div>
+
     <div class="row">
 
-        <div class="col-4">
+        <div class="col-6 text-center">
             {% if champ %}
-{#            ('Ocean Almondflame', 6, 'Dwarf', 'images/race/dwarf.png')   #}
-            <h2>{{ champ[0] }} ({{ champ[1] }})</h2>
-            <h3>{{ champ[2] }}</h3>
-            <img src="{{ champ[3] }}" alt="{{ champ[0] }}">
+            {#('Ocean Almondflame', 6, 'Dwarf', 'images/race/dwarf.png')   #}
+            <h2>Nejlepší postava</h2>
+            <h3>{{ champ[0] }} ({{ champ[1] }})</h3>
+            <img id="karta" src="{{ champ[3] }}" alt="{{ champ[0] }}">
             {% endif %}
         </div>
 
-        <div class="col-4">
-            <table class="table">
-                <tr>
-                    <th>PJ in</th>
-                    <th></th>
-                </tr>
-{#              (ad_id: 1, ad_objective: 'Kill dragon')#}
-                {% for adventure in adventures %}
-                <tr>
-                    <td>
-                        <a href="/adventure/{{ adventure[0] }}">
-                           {{ adventure[1] }}
-                        </a>
-                    </td>
-                    <td></td>
-                </tr>
-                {% endfor %}
-            </table>
-        </div>
-
-        <div class="col-4">
-            <div class="table_dragon">
-                <div class="row grid-buttons buttons">
-                    <div class="col4">
-                        <a class="btn btn-xs btn-success" href="/character-add/{{ player[0] }}"><i class="fa fa-plus-circle"></i> Přidat postavu </a>
-                    </div>
-                 </div>
-                <img src="../static/images/d6.png">
-                <table>
+        <div class="col-6">
+            <div class="col-12">
+                <table class="table player-table">
                     <tr>
-                        <th>Postava</th>
+                        <th>PJ in</th>
                         <th></th>
                     </tr>
-                    {% for character in characters %}
+                    {#(ad_id: 1, ad_objective: 'Kill dragon')#}
+                    {% for adventure in adventures %}
                     <tr>
                         <td>
-                            <a href="/character/{{ character[0] }}">
-                               {{ character[1] }} ({{ character[2] }})
+                            <a href="/adventure/{{ adventure[0] }}">
+                               {{ adventure[1] }}
                             </a>
                         </td>
                         <td></td>
                     </tr>
                     {% endfor %}
                 </table>
+            </div>
+
+            <div class="col-12">
+                <div class="table_dragon">
+                    <div class="row grid-buttons buttons">
+                        <div class="col4">
+                            <a class="btn btn-xs btn-success" href="/character-add/{{ player[0] }}"><i class="fa fa-plus-circle"></i> Přidat postavu </a>
+                        </div>
+                     </div>
+
+                    <table class="player-table">
+                        <tr>
+                            <th>Postava</th>
+                            <th></th>
+                        </tr>
+                        {% for character in characters %}
+                        <tr>
+                            <td>
+                                <a href="/character/{{ character[0] }}">
+                                   {{ character[1] }} ({{ character[2] }})
+                                </a>
+                            </td>
+                            <td></td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
             </div>
         </div>
     </div>

@@ -4,21 +4,15 @@
     <div class="container">
         {% include "header.html" %}
         <h1 class="text-center">{% block title %}Hráči{% endblock %}</h1>
-        <div>
+        <div class="table">
             <div class="table_dragon">
-                <div class="row grid-buttons">
-                     <div class="col4">
-                         <a href="/player-add" class="btn btn-success"><i class="fa fa-plus-circle"></i> Přidat hráče</a>
-                    </div>
-                </div>
-
-                <img src="../static/images/d5.png" alt="drak">
+                <img src="../static/images/d8.png" alt="drak">
 
                 <table>
                     <tr>
                         <th>ID</th>
                         <th>Meno</th>
-                        <th id="gold">počet obdrženého zlata</th>
+                        <th id="gold">počet zlata</th>
                         <th id="kills">počet zabití</th>
                         <th></th>
                     </tr>
@@ -30,9 +24,9 @@
                         <td>{{ player[3] }}</td>
                         <td>
                             {% if current_user["role"] == "admin" %}
-                            <a class="btn btn-sm btn-danger" href="/delete-player/{{ player[0] }}"><i class="fa fa-trash"></i></a>
+                            <a class="btn btn-sm btn-danger button" href="/delete-player/{{ player[0] }}"><i class="fa fa-trash"></i></a>
                             {% endif %}
-                            <a class="btn btn-sm btn-primary" href="/player/{{ player[0] }}"><i class="fa fa-eye"></i></a>
+                            <a class="btn btn-sm btn-primary button" href="/player/{{ player[0] }}"><i class="fa fa-eye"></i></a>
                         </td>
                     </tr>
                      {% endfor %}

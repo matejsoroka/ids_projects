@@ -1,14 +1,45 @@
 {% extends "base.html" %}
 {% block content %}
-{% include "header.html" %}
-<div class="container">
+<div class="container char-space">
+    {% include "header.html" %}
     <div class="row">
-{#        (id 3, 'Gibblegill', 'Orc', level 5, player_id 2, 'Matej', 'Gnome', 'images/race/gnome.png') #}
-        <h1 class="col-12 text-center">{% block title %}{{ character[1] }}{% endblock %} {{ character[0] }}</h1>
-        <h2 class="col-12 text-center">{{ character[2] }} - {{ character[6] }}</h2>
-        <h3 class="col-12 text-center">{{ character[3] }}</h3>
-        <h3 class="col-12 text-center"><a href="/player/{{ character[4] }}">{{ character[5] }}</a></h3>
-        <img src="{{ character[7] }}" alt={{ character[1] }}"">
+        <div class="col-12 character">
+            {#        (id 3, 'Gibblegill', 'Orc', level 5, player_id 2, 'Matej', 'Gnome', 'images/race/gnome.png') #}
+            <h1 class="col-12 text-center">{% block title %}{{ character[1] }}{% endblock %} {{ character[0] }}</h1>
+            <h2 class="col-12 text-center">{{ character[2] }} - {{ character[6] }}</h2>
+            <h3 class="col-12 text-center">{{ character[3] }}</h3>
+            <h3 class="col-12 text-center"><a href="/player/{{ character[4] }}">{{ character[5] }}</a></h3>
+        </div>
+
+        <div class="col-5">
+            <img id="karta" src="{{ character[7] }}" alt={{ character[1] }}"">
+        </div>
+
+        <div class="col-7 character-text">
+            <div class="col-12 char-par">
+                <p>
+                    Topping sweet tootsie roll liquorice biscuit. Candy cheesecake fruitcake wafer icing pudding tart danish.
+                    Gummies topping tart sesame snaps caramels lollipop. Jelly beans chupa chups.
+                </p>
+            </div>
+
+            <div class="col-12 char-par">
+                <p>
+                    Cake tart lollipop. Jelly-o cupcake ice cream cake jelly cookie marshmallow gummi bears. Gummies tiramisu cotton candy.
+                    Chocolate cake macaroon fruitcake danish chocolate cake sweet roll chocolate
+                </p>
+
+                <p>
+                    Croissant liquorice dragée jelly pie. Dessert topping tiramisu gingerbread brownie brownie jelly-o. Carrot cake carrot
+                </p>
+            </div>
+
+            <div class="col-12 char-par">
+                <p>
+                    Soufflé tiramisu danish pie apple pie macaroon gummi bears croissant soufflé. Chocolate bar caramels candy carrot cake.
+                    Cotton candy bear claw sweet roll toffee apple pie danish dessert.
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

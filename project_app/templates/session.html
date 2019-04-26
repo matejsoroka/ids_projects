@@ -1,21 +1,25 @@
 {% extends 'base.html' %}
 {% block content %}
-{% include "header.html" %}
 <div class="container" id="players">
+    {% include "header.html" %}
 {#    session_id: 1, Place: ('The Black Cat', date: datetime.datetime(2019, 5, 3, 0, 0), Moderator_id: 1, Moderator: 'Alex')#}
     <div class="row">
         <h1 class="col-12 text-center">{% block title %}{{ session[1] }}{% endblock %}</h1>
-        <h2 class="col-12 text-center">{{ session[2] }}</h2>
-        <h3 class="col-12 text-center"><a href="/player/{{ session[3] }}">{{ session[4] }}</a></h3>
-        <div class="col-12">
-            {% if current_user["id"] | int == session[3] | int %}
-            <a class="btn btn-xs btn-danger" href="/delete-session/{{ session[0] }}"><i class="fa fa-minus-circle"></i> Odstranit sezení</a>
-            {% endif %}
+
+        <div class="col-12 info">
+            <h2 class="col-12 text-center">{{ session[2] }}</h2>
+            <h3 class="col-12 text-center"><a href="/player/{{ session[3] }}">{{ session[4] }}</a></h3>
         </div>
+
+        {% if current_user["id"] | int == session[3] | int %}
+        <div class="text-center col-12">
+            <a class="btn btn-xs btn-danger" href="/delete-session/{{ session[0] }}"><i class="fa fa-minus-circle"></i> Odstranit sezení</a>
+        </div>
+        {% endif %}
     </div>
     <div class="row">
         <div class="col-12">
-            <div class="table_dragon">
+            <div class="table_dragon sessions-table">
                 <img src="../static/images/d6.png">
                 <table>
                     <tr>

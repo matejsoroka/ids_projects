@@ -1,50 +1,82 @@
 {% extends "base.html" %}
 {% block content %}
-{% include "header.html" %}
+
     <div class="container">
-        <h1 class="text-center">Adding adventure</h1>
-        <form method="POST" enctype="multipart/form-data">
-            {% for fieldName, errorMessages in form.errors.items() %}
-                {% for err in errorMessages %}
-                <div class="alert alert-danger" role="alert">
-                    {{ fieldName }}: {{ err }}
-                </div>
-                {% endfor %}
-            {% endfor %}
-            {{ form.csrf_token }}
-            <div class="form-group">
-                {{ form.objective.label }}
-                {{ form.objective(class_="form-control") }}
+        {% include "header.html" %}
+        <h1 class="text-center">Přidat dobrodružství</h1>
+        <div class="col-12 char-add">
+            <div class="col-6">
+                <form method="POST" enctype="multipart/form-data">
+                    {% for fieldName, errorMessages in form.errors.items() %}
+                        {% for err in errorMessages %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ fieldName }}: {{ err }}
+                        </div>
+                        {% endfor %}
+                    {% endfor %}
+                    {{ form.csrf_token }}
+                    <div class="form-group">
+                        <h5>{{ form.objective.label }}</h5>
+                        {{ form.objective(class_="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        <h5>{{ form.difficulty.label }}</h5>
+                        {{ form.difficulty(class_="form-control") }}
+                    </div>
+                </form>
             </div>
-            <div class="form-group">
-                {{ form.difficulty.label }}
-                {{ form.difficulty(class_="form-control") }}
+
+            <div class="col-6">
+                <form>
+                    <div class="form-group">
+                        <h5>{{ form.pj.label }}</h5>
+                        {% if current_user["role"] == "admin" %}
+                        {{ form.pj(class_="form-control") }}
+                        {% else %}
+                        {{ form.pj(class_="form-control", disabled=True) }}
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <h5>{{ form.location.label }}</h5>
+                        {{ form.location(class_="form-control") }}
+                    </div>
+                </form>
             </div>
-            <div class="form-group">
-                {{ form.pj.label }}
-                {% if current_user["role"] == "admin" %}
-                {{ form.pj(class_="form-control") }}
-                {% else %}
-                {{ form.pj(class_="form-control", disabled=True) }}
-                {% endif %}
+        </div>
+
+        <div class="col-12 char-add">
+            <div class="col-4">
+                <form>
+                   <div class="form-group">
+                        <h5>{{ form.characters.label }}</h5>
+                        {{ form.characters(class_="form-control __multiselect") }}
+                    </div>
+                </form>
             </div>
-            <div class="form-group">
-                {{ form.location.label }}
-                {{ form.location(class_="form-control") }}
+
+            <div class="col-4">
+                <form>
+                    <div class="form-group">
+                        <h5>{{ form.game_elements.label }}</h5>
+                        {{ form.game_elements(class_="form-control __multiselect") }}
+                    </div>
+                </form>
             </div>
-            <div class="form-group">
-                {{ form.characters.label }}
-                {{ form.characters(class_="form-control __multiselect") }}
+
+            <div class="col-4">
+                <form>
+                    <div class="form-group">
+                        <h5>{{ form.authors.label }}</h5>
+                        {{ form.authors(class_="form-control __multiselect") }}
+                    </div>
+                </form>
             </div>
-            <div class="form-group">
-                {{ form.game_elements.label }}
-                {{ form.game_elements(class_="form-control __multiselect") }}
-            </div>
-            <div class="form-group">
-                {{ form.authors.label }}
-                {{ form.authors(class_="form-control __multiselect") }}
-            </div>
-            <input type="submit" value="Add" class="btn btn-primary"/>
-        </form>
+        </div>
+
+        <div class="button-form col-12">
+            <form id="form-btn">
+                    <input id="btn" type="submit" value="Přidat" class="btn btn-primary"/>
+            </form>
+        </div>
     </div>
 {% endblock %}

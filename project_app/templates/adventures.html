@@ -11,7 +11,7 @@
                 </div>
             </div>
 
-            <img src="../static/images/d7.png" alt="drak">
+            <img src="../static/images/d9.png" alt="drak">
 
             <table>
                 <tr>
@@ -26,10 +26,10 @@
                     <td>{{ adventure[1] }}</td>
                     <td>{{ adventure[2] }}</td>
                     <td>
-                        <a class="btn btn-sm btn-primary" href="/adventure/{{ adventure[0] }}"><i class="fa fa-eye"></i></a>
                         {% if current_user["role"] == "admin" %}
-                        <a class="btn btn-sm btn-danger" href="/delete-adventure/{{ adventure[0] }}"><i class="fa fa-trash"></i></a>
+                        <a href="javascript:void(0);" class="btn btn-sm btn-danger button" onclick="myAlert()"><i class="fa fa-trash"></i></a>
                         {% endif %}
+                        <a class="btn btn-sm btn-primary button" href="/adventure/{{ adventure[0] }}"><i class="fa fa-eye"></i></a>
                     </td>
                 </tr>
                 {% endfor %}

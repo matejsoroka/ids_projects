@@ -2,10 +2,6 @@ $(function () {
 
     $(".__multiselect").multiSelect(); // multiselect init
 
-    $( "#datepicker" ).datepicker({    // datepicker init
-        dateFormat: "yy/mm/dd"
-    });
-
     let alerts = $(".alert");          // alerts animations
     alerts.slideDown();
     setTimeout(function(){
@@ -13,3 +9,12 @@ $(function () {
     }, 3000);
 
 });
+
+function  myAlert() {
+    var adventure = console.log("{{ adventure[0] }}");
+    if (confirm("Opravdu chcete vykonat akci?")) {
+        window.location.href = "/delete-adventure/" + adventure;
+    } else {
+        window.location.href = "/adventures";
+    }
+}

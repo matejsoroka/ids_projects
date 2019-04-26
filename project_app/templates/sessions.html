@@ -1,33 +1,39 @@
 {% extends "base.html" %}
 {% block content %}
-{% include "header.html" %}
+
 <div class="container">
-    <h1 class="text-center">Sessions</h1>
-    <div class="row grid-buttons">
-        <div class="col4">
-            <a href="/session-add" class="btn btn-success"><i class="fa fa-plus-circle"></i> Add session</a>
+    {% include "header.html" %}
+    <h1 class="text-center">Sezení</h1>
+    <div class="table_dragon">
+        <div class="row grid-buttons">
+            <div class="col4">
+                <a href="/session-add" class="btn btn-success"><i class="fa fa-plus-circle"></i> Přidat sezení</a>
+            </div>
         </div>
+
+        <img src="../static/images/d7.png" alt="drak">
+
+        <table class="table">
+            <tr>
+                <th>ID</th>
+                <th>Place</th>
+                <th>Date</th>
+                <th></th>
+            </tr>
+            {% for session in sessions %}
+            <tr>
+                <td>{{ session[0] }}</td>
+                <td>{{ session[2] }}</td>
+                <td>{{ session[1] }}</td>
+                <td>
+                    {% if current_user["role"] == "admin" %}
+                    <a class="btn btn-sm btn-danger button" href="/delete-session/{{ session[0] }}"><i class="fa fa-trash"></i></a>
+                    {% endif %}
+                    <a class="btn btn-sm btn-primary button" href="/session/{{ session[0] }}"><i class="fa fa-eye"></i></a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
     </div>
-    <table class="table">
-        <tr>
-            <th>ID</th>
-            <th>Place</th>
-            <th>Date</th>
-            <th></th>
-        </tr>
-        {% for session in sessions %}
-        <tr>
-            <td>{{ session[0] }}</td>
-            <td>{{ session[2] }}</td>
-            <td>{{ session[1] }}</td>
-            <td>
-                <a class="btn btn-sm btn-primary" href="/session/{{ session[0] }}"><i class="fa fa-eye"></i></a>
-                {% if current_user["role"] == "admin" %}
-                <a class="btn btn-sm btn-danger" href="/delete-session/{{ session[0] }}"><i class="fa fa-trash"></i></a>
-                {% endif %}
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
 </div>
 {% endblock %}

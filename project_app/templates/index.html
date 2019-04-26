@@ -19,7 +19,10 @@
                         <a class="nav-link" href="/sessions">Sezení</a>
                     </li>
                     <li>
-                        <a class="nav-link" href="/sessions">Odhlásit se</a>
+                        <a class="nav-link" href="/player/{{ current_user['id'] }}"> {{current_user["name"]}} </a>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="/logout"><i class="fas fa-sign-out-alt"></i></a>
                     </li>
                 </ul>
         </nav>
