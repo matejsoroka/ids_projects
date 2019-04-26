@@ -1,7 +1,11 @@
 $(function () {
 
     $(".__multiselect").multiSelect(); // multiselect init
-
+	
+	$( "#datepicker" ).datepicker({	   // datepicker init 
+		dateFormat: "yy/mm/dd"
+	});
+	
     let alerts = $(".alert");          // alerts animations
     alerts.slideDown();
     setTimeout(function(){
@@ -10,11 +14,11 @@ $(function () {
 
 });
 
-function  myAlert() {
-    var adventure = console.log("{{ adventure[0] }}");
-    if (confirm("Opravdu chcete vykonat akci?")) {
-        window.location.href = "/delete-adventure/" + adventure;
-    } else {
-        window.location.href = "/adventures";
-    }
-}
+/*Delete button - Alert function*/
+$(document).ready(function(){
+	$(".btn-danger").click(function(){
+		if (!confirm("Opravdu chcete vykonat akci?")) {
+			event.preventDefault();
+		}
+	});
+});

@@ -17,15 +17,15 @@
                     {% endfor %}
                     {{ form.csrf_token }}
                     <div class="form-group">
-                        <h5>{{ form.place.label }}</h5>
+                        {{ form.place.label }}
                         {{ form.place(class_="form-control") }}
                     </div>
                     <div class="form-group">
-                        <h5>{{ form.date.label }}</h5>
+                        {{ form.date.label }}
                         {{ form.date(class_="form-control", id="datepicker") }}
                     </div>
                     <div class="form-group">
-                        <h5>{{ form.moderator.label }}</h5>
+                        {{ form.moderator.label }}
                         {% if current_user["role"] == "admin" %}
                         {{ form.moderator(class_="form-control") }}
                         {% else %}
@@ -38,7 +38,7 @@
             <div class="col-6">
                 <form method="POST" enctype="multipart/form-data">
                     <div class="form-group">
-                        <h5>{{ form.adventures.label }}</h5>
+                        {{ form.adventures.label }}
                         {{ form.adventures(class_="form-control __multiselect") }}
                     </div>
                 </form>

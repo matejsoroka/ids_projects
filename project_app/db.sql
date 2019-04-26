@@ -219,7 +219,8 @@ create table death(
 create table race(
   race_id int generated as identity constraint PK_race_id primary key,
   name varchar(64),
-  image varchar(256)
+  image varchar(256),
+  description varchar(1024)
 );
 
 create table character(
@@ -316,15 +317,15 @@ create table adventure_session(
 INSERT INTO PLAYER ("NAME", "GOLD", "KILLS", "PASSWORD") VALUES ('Alex', 12, 6, '$2b$12$fVF90LTwy1JcaMK5TdyTfuuIae5uCBaO9ChOGMhn/oEfBr7XwJjeu');
 INSERT INTO LOCATION ("NAME") VALUES ('Lost woods');
 INSERT INTO DEATH ("date", "LOCATION_ID") VALUES (TO_DATE('2015/05/03 21:02:44', 'yyyy/mm/dd hh24:mi:ss'), 1);
-INSERT INTO RACE ("NAME", "IMAGE") VALUES ('Elf', 'images/race/elf.png');
-INSERT INTO RACE ("NAME", "IMAGE") VALUES ('Dwarf', 'images/race/dwarf.png');
-INSERT INTO RACE ("NAME", "IMAGE") VALUES ('Gnome', '/static/images/race/gnome.png');
-INSERT INTO RACE ("NAME", "IMAGE") VALUES ('Dragonborn', '/static/images/race/dragonborn.png');
-INSERT INTO RACE ("NAME", "IMAGE") VALUES ('Human', '/static/images/race/human.png');
-INSERT INTO RACE ("NAME", "IMAGE") VALUES ('Tiefling', '/static/images/race/tiefling.png');
-INSERT INTO RACE ("NAME", "IMAGE") VALUES ('Half elf', '/static/images/race/half_elf.png');
-INSERT INTO RACE ("NAME", "IMAGE") VALUES ('Half orc', '/static/images/race/half_orc.png');
-INSERT INTO RACE ("NAME", "IMAGE") VALUES ('Halfling', '/static/images/race/halfling.png');
+INSERT INTO RACE ("NAME", "IMAGE", "DESCRIPTION") VALUES ('Elf', 'images/race/elf.png', 'Elfové jsou magičtí lidé z jiných světů, kteří žijí ve světě, ale nejsou jeho součástí. Žijí v místech éterické krásy, uprostřed prastarých lesů nebo ve stříbřitých věžích, které se třpytí světlem luštěnin, kde se vzduchem rozlévá jemná hudba a jemný vůně vane. Zbarvení elfů zahrnuje normální lidský rozsah a zahrnuje také kůži v odstínech mědi, bronzu a téměř modrobílé, vlasy zelené nebo modré a oči jako kaluže tekutého zlata nebo stříbra.');
+INSERT INTO RACE ("NAME", "IMAGE", "DESCRIPTION") VALUES ('Dwarf', 'images/race/dwarf.png', 'Království bohaté na prastarou majestátnost, sály vytesané do kořenů hor, ozvěny výběhů a kladiv v hlubokých dolech a planoucí kovárny - tyto společné nitě spojují všechny trpaslíky. Trpaslíci mohou žít více než 400 let, takže nejstarší žijící trpaslíci si často pamatují velmi odlišný svět. Například někteří z nejstarších trpaslíků žijících v citadele Felbarru si možná vzpomenou na den, kdy orkové dobyli pevnost a vzali je do exilu, který trval více než 250 let.');
+INSERT INTO RACE ("NAME", "IMAGE", "DESCRIPTION") VALUES ('Gnome', '/static/images/race/gnome.png', 'Trvalé hučení rušných činností proniká do válek a sousedství, kde trpaslíci utvářejí své blízké komunity. Hlučné zvuky přerušují ostřejší zvuky: tu je broušení broušených ozubených kol, menší výbuch, kvílení překvapení nebo triumfu, a zejména výbuchy smíchu. Gnomové se radují ze života, užívají si každý okamžik vynálezu, zkoumání, vyšetřování, stvoření a hry. Vousy mužského gnome, na rozdíl od jeho divokých vlasů, jsou pečlivě zastřižené, ale často stylizované do zvědavých vidlic nebo úhledných bodů.');
+INSERT INTO RACE ("NAME", "IMAGE", "DESCRIPTION") VALUES ('Dragonborn', '/static/images/race/dragonborn.png', 'Narozený z draků, jak jejich jméno prohlašuje, dragonborn pyšně prochází světem, který je přivítá strašlivým nepochopením. Ve tvaru drakonických bohů nebo samotných draků se dragonborn původně vylíhl z drakových vajec jako jedinečná rasa, kombinující nejlepší vlastnosti draků a humanoidů. Někteří dragonborn jsou věrní služebníci opravdovým drakům, jiní tvoří řady vojáků ve velkých válkách, a jiní se ocitnou v nouzi, s jasným povoláním v životě.');
+INSERT INTO RACE ("NAME", "IMAGE", "DESCRIPTION") VALUES ('Human', '/static/images/race/human.png', 'Ve většině světových výpočtů jsou lidé nejmladší ze společných ras, pozdě na světě, a krátkotrvající ve srovnání s trpaslíky, elfy a draky. Možná je to kvůli jejich kratším životům, že se snaží dosáhnout co nejvíce let. Nebo snad cítí, že mají něco, co mohou udělat pro starší rasy, a proto stavět své mocné říše na základech dobývání a obchodu. Bez ohledu na to, co je řídí, jsou lidé inovátory, úspěchy a průkopníci světů.');
+INSERT INTO RACE ("NAME", "IMAGE", "DESCRIPTION") VALUES ('Tiefling', '/static/images/race/tiefling.png', 'Chcete-li být uvítáni pohledy a šeptem, trpět násilím a urážet na ulici, vidět nedůvěru a strach v každém oku: to je spousta tieflingu. A aby se otočil nůž, věří ti, že je to proto, že pakt zasáhl generace, které před nedávnem naplnily esenci Asmodeus - vládce Devíti pekel - do jejich pokrevní linie. Jejich vzhled a jejich povaha nejsou jejich vinou, ale výsledkem starodávného hříchu, za který budou vždy zodpovědní oni i jejich děti a děti jejich dětí.');
+INSERT INTO RACE ("NAME", "IMAGE", "DESCRIPTION") VALUES ('Half elf', '/static/images/race/half_elf.png', 'Polovina elfů, kteří jsou ve dvou světech, ale skutečně patří k těm, kteří jsou s nimi spojeni, kombinují to, co někteří říkají, jsou nejlepší kvality jejich elfů a lidských rodičů: lidská zvědavost, vynalézavost a ambice zmírněné rafinovanými smysly a uměleckými chutí elfů. Někteří poloviční elfové žijí mezi lidmi, odděleni svými emocionálními a fyzickými odlišnostmi, sledují přátele a blízké, zatímco čas se jich sotva dotýká. Jiní žijí s elfy, rostou neklidně, když dosáhnou dospělosti v nadčasových elfích říších.');
+INSERT INTO RACE ("NAME", "IMAGE", "DESCRIPTION") VALUES ('Half orc', '/static/images/race/half_orc.png', 'Ať už byli spojeni pod vedením mocného čaroděje nebo bojovali po nekolika letech konfliktu, ork a lidské kmeny někdy tvoří spojenectví, spojující síly do větší hordy k teroru civilizovaných zemí v okolí. Když jsou tato aliance uzavřena sňatky, narodí se polovina orků. Někteří poloviční orkové se stávají hrdými náčelníky orků, jejich lidská krev jim dává výhodu nad jejich plnokrevnými orky.');
+INSERT INTO RACE ("NAME", "IMAGE", "DESCRIPTION") VALUES ('Halfling', '/static/images/race/halfling.png', 'Komfort domova je cílem většiny životů polovinců: místo, kde se můžete usadit v klidu a míru, daleko od mariting monster a střetu armád; planoucí oheň a velkorysé jídlo; jemný nápoj a skvělá konverzace. I když někteří z nich žijí své dny v odlehlých zemědělských komunitách, jiní tvoří kočovní kapely, které neustále cestují, lákají otevřenou cestou a širokým obzorem, aby objevili zázraky nových zemí a národů.');
 INSERT INTO CHARACTER ("NAME", "RACE_ID", "CLASS", "level", "PLAYER_ID", "DEATH_ID") VALUES ('Frodo', 1, 'Warlock', 3, 1, 1);
 INSERT INTO CHARACTER ("NAME", "RACE_ID", "CLASS", "level", "PLAYER_ID") VALUES ('Ocean Almondflame', 2, 'Cleric', 6, 1);
 INSERT INTO EQUIPMENT ("TYPE") VALUES ('Battleaxe');

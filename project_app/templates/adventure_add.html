@@ -16,7 +16,7 @@
                     {% endfor %}
                     {{ form.csrf_token }}
                     <div class="form-group">
-                        <h5>{{ form.objective.label }}</h5>
+                        {{ form.objective.label }}
                         {{ form.objective(class_="form-control") }}
                     </div>
                     <div class="form-group">
@@ -29,7 +29,7 @@
             <div class="col-6">
                 <form>
                     <div class="form-group">
-                        <h5>{{ form.pj.label }}</h5>
+                        {{ form.pj.label }}
                         {% if current_user["role"] == "admin" %}
                         {{ form.pj(class_="form-control") }}
                         {% else %}
@@ -37,7 +37,7 @@
                         {% endif %}
                     </div>
                     <div class="form-group">
-                        <h5>{{ form.location.label }}</h5>
+                        {{ form.location.label }}
                         {{ form.location(class_="form-control") }}
                     </div>
                 </form>
@@ -48,7 +48,7 @@
             <div class="col-4">
                 <form>
                    <div class="form-group">
-                        <h5>{{ form.characters.label }}</h5>
+                        {{ form.characters.label }}
                         {{ form.characters(class_="form-control __multiselect") }}
                     </div>
                 </form>
@@ -57,7 +57,7 @@
             <div class="col-4">
                 <form>
                     <div class="form-group">
-                        <h5>{{ form.game_elements.label }}</h5>
+                        {{ form.game_elements.label }}
                         {{ form.game_elements(class_="form-control __multiselect") }}
                     </div>
                 </form>
@@ -66,7 +66,7 @@
             <div class="col-4">
                 <form>
                     <div class="form-group">
-                        <h5>{{ form.authors.label }}</h5>
+                        {{ form.authors.label }}
                         {{ form.authors(class_="form-control __multiselect") }}
                     </div>
                 </form>
