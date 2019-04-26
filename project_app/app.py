@@ -205,7 +205,7 @@ def sign_in():
             if bcrypt.check_password_hash(data[5], form.password.data):
                 user = User.User(data[0])
                 login_user(user)
-                flash('Úspěšně ste se přihlásily', "success")
+                flash('Přihlášení proběhlo úspěšně', "success")
                 return redirect(url_for('index'))
             else:
                 form.errors["Validace"] = ["Špatné heslo"]
