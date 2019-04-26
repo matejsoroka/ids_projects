@@ -52,9 +52,9 @@ class Model:
         self.cursor.execute("SELECT {}_id FROM {} ORDER BY {}_id DESC".format(table, table, table))
         return self.cursor.fetchone()[0]
 
-    def get_row(self, table, id):
+    def get_row(self, table, row_id):
         """Gets row from table with specific id (doesn't work when table_name != table_name_id)"""
-        self.cursor.execute("SELECT * FROM {} WHERE {}_id={}".format(table, table, id))
+        self.cursor.execute("SELECT * FROM {} WHERE {}_id={}".format(table, table, row_id))
         row = self.cursor.fetchone()
         return row if row else None
 
@@ -76,13 +76,14 @@ class Model:
         self.cursor.execute("SELECT player_id FROM player")
         return self.cursor.fetchall()
 
-    def delete_row(self, table, id):
+    def delete_row(self, table, row_id):
         """Removes row from table with specific id (doesn't work when table_name != table_name_id)"""
-        self.cursor.execute("DELETE FROM {} WHERE {}_id={}".format(table, table, id))
+        self.cursor.execute("DELETE FROM {} WHERE {}_id={}".format(table, table, row_id))
         self.db.commit()
 
     def get_player_best_character(self, player_id):
-        self.cursor.execute('SELECT CHARACTER.name as character_name, CHARACTER."level", RACE.NAME as race_name, RACE.IMAGE '
+        self.cursor.execute('SELECT CHARACTER.name as character_name, CHARACTER."level", RACE.NAME as race_name, '
+                            'RACE.IMAGE '
                             'from CHARACTER '
                             'join PLAYER on CHARACTER.player_id = PLAYER.player_id '
                             'join RACE on CHARACTER.RACE_ID = race.RACE_ID '
@@ -103,7 +104,7 @@ class Model:
 
     def get_session(self, session_id):
         self.cursor.execute(
-            'SELECT SESSIONS.session_id, SESSIONS.place, SESSIONS."date", SESSIONS.moderator, PLAYER.name FROM SESSIONS '
+            'SELECT SESSIONS.session_id,SESSIONS.place, SESSIONS."date", SESSIONS.moderator, PLAYER.name FROM SESSIONS '
             'join PLAYER on SESSIONS.moderator = PLAYER.player_id '
             'where PLAYER.player_id = SESSIONS.moderator AND SESSIONS.session_id={}'.format(session_id))
         return self.cursor.fetchone()
@@ -111,7 +112,8 @@ class Model:
     def get_session_adventures(self, session_id):
         self.cursor.execute(
             'SELECT a.adventure_id, a.objective FROM ADVENTURE a, ADVENTURE_SESSION ads, SESSIONS s '
-            'WHERE s.session_id=ads.session_id AND a.adventure_id=ads.adventure_id AND s.session_id={}'.format(session_id))
+            'WHERE s.session_id=ads.session_id AND a.adventure_id=ads.adventure_id AND s.session_id={}'
+            .format(session_id))
         return self.cursor.fetchall()
 
     def get_adventure(self, adventure_id):
@@ -125,7 +127,8 @@ class Model:
         self.cursor.execute(
             'SELECT c.character_id, c.name '
             'FROM ADVENTURE a, CHARACTER c, CHARACTER_ADVENTURE ca '
-            'WHERE a.adventure_id=ca.adventure_id AND c.character_id=ca.character_id AND a.adventure_id={}'.format(adventure_id))
+            'WHERE a.adventure_id=ca.adventure_id AND c.character_id=ca.character_id AND a.adventure_id={}'
+            .format(adventure_id))
         return self.cursor.fetchall()
 
     def get_pjs_adventures(self, player_id):
