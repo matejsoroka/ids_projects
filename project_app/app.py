@@ -7,10 +7,6 @@ app = Flask(__name__)
 model = model.Model()
 bcrypt = Bcrypt(app)
 
-
-# TODO: Password input as **** not string
-# TODO: Password input as **** not string [sign-in.html]
-
 # config
 app.config.update(
     SECRET_KEY='foo'
