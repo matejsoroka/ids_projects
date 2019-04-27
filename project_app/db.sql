@@ -170,9 +170,13 @@ EXCEPTION
       END IF;
 END;
 
+DROP SEQUENCE player_seq;
+drop table strings;
+drop procedure who_is_rich;
+
 -- CREATING TABLES
 create table player(
-  player_id int generated as identity constraint PK_player primary key,
+  player_id int constraint PK_player primary key,
   name varchar(64) unique,
   gold int,
   kills int,
@@ -313,6 +317,49 @@ create table adventure_session(
   FOREIGN KEY (adventure_id) REFERENCES adventure(adventure_id) ON DELETE CASCADE
 );
 
+
+create table strings(
+  id int generated as identity constraint PK_vysledok primary key,
+  vysledok varchar(255)
+);
+
+
+-- TRIGGER na generovanie primarnych klucov v tabulke Player
+CREATE SEQUENCE  player_seq  NOCACHE;
+
+CREATE or replace TRIGGER  Player_PK
+  BEFORE INSERT ON  PLAYER
+  FOR EACH ROW
+DECLARE
+BEGIN
+  IF :NEW.player_id  IS NULL THEN
+    :new.player_id := player_seq.nextval;
+  END IF;
+END;
+
+--drop procedure who_is_rich;
+-- PROCEDURA na vypis hracov, ktory maju viacej zlata, ako je priemer
+CREATE OR REPLACE PROCEDURE who_is_rich AS
+  CURSOR players IS SELECT * FROM PLAYER;
+  average int;
+  g players%ROWTYPE;
+BEGIN
+  select avg(PLAYER.gold) into average from PLAYER;
+  dbms_output.put_line('Hraci s viacej zlatom ako priemer:');
+  OPEN players;
+  LOOP
+    FETCH players INTO g;  -- nacitanie riadku do kurzoru
+    EXIT WHEN players%NOTFOUND;
+    IF (g.GOLD >= average) THEN
+      --INSERT INTO strings ("VYSLEDOK") VALUES (g.name);
+       dbms_output.put_line(g.NAME);
+    end if;
+  end loop;
+  CLOSE players;
+
+end who_is_rich;
+
+
 -- INSERTING DUMMY DATA
 INSERT INTO PLAYER ("NAME", "GOLD", "KILLS", "PASSWORD") VALUES ('Alex', 12, 6, '$2b$12$fVF90LTwy1JcaMK5TdyTfuuIae5uCBaO9ChOGMhn/oEfBr7XwJjeu');
 INSERT INTO LOCATION ("NAME") VALUES ('Lost woods');
@@ -364,7 +411,7 @@ INSERT INTO ADVENTURE ("PJ_ID", "LOCATION_ID", "OBJECTIVE", "DIFFICULTY") VALUES
 INSERT INTO CHARACTER_ADVENTURE ("CHARACTER_ID", "ADVENTURE_ID") VALUES (3, 2);
 INSERT INTO ADVENTURE_AUTHOR ("ADVENTURE_ID", "AUTHOR_ID") VALUES (2, 1);
 INSERT INTO SESSIONS ("date", "PLACE") VALUES (TO_DATE('2019/03/20 20:02:44', 'yyyy/mm/dd hh24:mi:ss'), 'At Merlin''s home');
-INSERT INTO ADVENTURE_SESSION ("ADVENTURE_ID", "SESSION_ID") VALUES (2, 2);
+INSERT INTO ADVENTURE_SESSION ("ADVENTURE_ID", "SESSION_ID") VALUES (2, 1);
 INSERT INTO CAMPAIGN ("DIFFICULTY", "OBJECTIVE") VALUES (8, 'Conquer castle of dragons');
 INSERT INTO ADVENTURE_CAMPAIGN ("ADVENTURE_ID", "CAMPAIGN_ID") VALUES (2, 2);
 INSERT INTO GAME_ELEMENT ("NAME") VALUES ('Map of Midgard');
@@ -373,5 +420,83 @@ INSERT INTO GAME_ELEMENT ("NAME") VALUES ('Elre Valamin');
 INSERT INTO ENEMY ("RACE_ID", "level") VALUES (1, 2);
 INSERT INTO ADVENTURE_GAME_ELEMENT ("GAME_ELEMENT", "ADVENTURE_ID") VALUES (3, 2);
 INSERT INTO ADVENTURE_GAME_ELEMENT ("GAME_ELEMENT", "ADVENTURE_ID") VALUES (4, 2);
+
+-- dotaz vyuzivajuci spojenie 2 tabuliek
+  -- vyber hracovej postavy s najvyssim levelom
+SELECT PLAYER.name as player_name, CHARACTER.name as character_name, CHARACTER."level" from CHARACTER
+  join PLAYER on CHARACTER.player_id = PLAYER.player_id
+  where CHARACTER."level" = ALL
+    (SELECT max(CHARACTER."level") from CHARACTER where CHARACTER.player_id = PLAYER.player_id);
+
+-- dotaz vyuzivajuci spojenie 2 tabuliek
+  -- spojenie adventury a lokacie v ktorej sa adventúra odohrala
+SELECT ADVENTURE.objective, adventure.difficulty, l.name as location_name, l.location_id from ADVENTURE
+  JOIN LOCATION l on ADVENTURE.location_id = l.location_id;
+
+-- dotaz vyuzivajuci spojenie 3 tabuliek
+  -- vyber vybavenia pre kazdu postavu
+SELECT CHARACTER.name, EQUIPMENT.type, CHARACTER_EQUIPMENT.quantity FROM CHARACTER
+  join CHARACTER_EQUIPMENT on CHARACTER_EQUIPMENT.character_id = CHARACTER.character_id
+  join EQUIPMENT on EQUIPMENT.equipment_id = CHARACTER_EQUIPMENT.equipment_id
+  ORDER BY CHARACTER.name DESC;
+
+-- dotaz s GROUP BY a agregacnou funkciou
+  -- kolkych dobrodruzstiev sa zucastnili jednotlive postavy
+SELECT CHARACTER.CHARACTER_ID, CHARACTER.NAME, COUNT(*) as adventure_count FROM CHARACTER, CHARACTER_ADVENTURE
+  WHERE CHARACTER_ADVENTURE.CHARACTER_ID = CHARACTER.CHARACTER_ID
+  GROUP BY CHARACTER.CHARACTER_ID, CHARACTER.NAME
+  ORDER BY adventure_count DESC;
+
+-- dotaz s GROUP BY a agregacnou funkciou
+  -- Počet smrtí v každej lokácii
+SELECT LOCATION.name, COUNT(*) as death_count FROM death, location
+  WHERE LOCATION.location_id = DEATH.location_id
+  GROUP BY LOCATION.name
+  ORDER BY death_count DESC;
+
+-- dotaz s EXISTS
+  -- Výber mŕtvych postáv
+SELECT * FROM CHARACTER
+  WHERE EXISTS(SELECT CHARACTER_ID FROM DEATH WHERE DEATH.DEATH_ID = CHARACTER.DEATH_ID);
+
+-- dotaz s IN
+  -- Výber dobrodružstiev hraných v dátume medzi 1.3.2019 a 1.4.2019
+ SELECT ADVENTURE.OBJECTIVE FROM ADVENTURE WHERE
+ ADVENTURE.ADVENTURE_ID
+   IN (
+     SELECT ADVENTURE_SESSION.ADVENTURE_ID
+     FROM ADVENTURE_SESSION, SESSIONS
+     WHERE ADVENTURE_SESSION.SESSION_ID = ADVENTURE.ADVENTURE_ID AND
+           SESSIONS.SESSION_ID = ADVENTURE_SESSION.SESSION_ID AND
+           SESSIONS."date" BETWEEN TO_DATE('1.3.2019', 'dd.mm.yyyy') AND TO_DATE('1.4.2019', 'dd.mm.yyyy')
+   );
+
+--SET serveroutput ON;
+BEGIN
+  who_is_rich();
+END;
+
+-- INDEX: Dotaz - vyber hracovej postavy s najvyssim levelom
+DROP INDEX  index_postavy;
+
+EXPLAIN PLAN FOR
+  SELECT PLAYER.name as player_name, CHARACTER.name as character_name, CHARACTER."level" from CHARACTER
+  join PLAYER on CHARACTER.player_id = PLAYER.player_id
+  where CHARACTER."level" = ALL
+    (SELECT max(CHARACTER."level") from CHARACTER where CHARACTER.player_id = PLAYER.player_id);
+SELECT PLAN_TABLE_OUTPUT
+  FROM TABLE(DBMS_XPLAN.DISPLAY());
+
+-- vytvorenie indexu
+CREATE INDEX index_postavy ON CHARACTER(NAME);
+
+EXPLAIN PLAN FOR
+  SELECT PLAYER.name as player_name, CHARACTER.name as character_name, CHARACTER."level" from CHARACTER
+  join PLAYER on CHARACTER.player_id = PLAYER.player_id
+  where CHARACTER."level" = ALL
+    (SELECT max(CHARACTER."level") from CHARACTER where CHARACTER.player_id = PLAYER.player_id);
+SELECT PLAN_TABLE_OUTPUT
+  FROM TABLE(DBMS_XPLAN.DISPLAY());
+
 
 COMMIT
