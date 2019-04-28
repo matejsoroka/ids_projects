@@ -21,14 +21,14 @@
                     <li>
                         <a class="nav-link" href="/player/{{ current_user['id'] }}"> {{current_user["name"]}} </a>
                     </li>
-                    <li>
-                        <a class="nav-link" href="/logout"><i class="fa fa-sign-out-alt"></i></a>
-                    </li>
                     {% if current_user["role"] == "admin" %}
                     <li>
                         <a class="nav-link btn btn-defualt" href="/admin/"> Admin </a>
                     </li>
                     {% endif %}
+                    <li>
+                        <a class="nav-link" href="/logout"><i class="fa fa-sign-out-alt"></i></a>
+                    </li>
                 </ul>
         </nav>
     </header>

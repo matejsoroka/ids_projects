@@ -3,7 +3,7 @@
 <div class="container" id="players">
     {% include "header.html" %}
     <div class="row player">
-        <h1 class="col-12 text-center title">{% block title %}{{ player[1] }}{% endblock %} {{ player[0] }}</h1>
+        <h1 class="col-12 text-center title">{% block title %}{{ player[1] }}{% endblock %}</h1>
 
         <div class="col-12 money-money">
             <p class="text-center">{{ player[2] }} <i class="fa fa-coins"></i> {{ player[3] }} <i class="fa fa-skull-crossbones"></i></p>
@@ -29,6 +29,7 @@
         </div>
 
         <div class="col-6">
+            {% if adventures %}
             <div class="col-12">
                 <table class="table player-table">
                     <tr>
@@ -48,14 +49,19 @@
                     {% endfor %}
                 </table>
             </div>
+            {% endif %}
 
             <div class="col-12">
                 <div class="table_dragon">
+
                     <div class="row grid-buttons buttons">
+                        {% if current_user["role"] == "admin" or current_user["id"] | int == player[0] | int %}
                         <div class="col4">
                             <a class="btn btn-xs btn-success" href="/character-add/{{ player[0] }}"><i class="fa fa-plus-circle"></i> Přidat postavu </a>
                         </div>
+                        {% endif %}
                      </div>
+
 
                     <table class="player-table">
                         <tr>
