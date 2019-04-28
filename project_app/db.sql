@@ -179,12 +179,12 @@ EXCEPTION
       END IF;
 END;
 
-DROP SEQUENCE player_seq;
-DROP PROCEDURE who_is_rich;
+-- DROP SEQUENCE player_seq;
+-- DROP PROCEDURE who_is_rich;
 
 -- CREATING TABLES
 create table player(
-  player_id int constraint PK_player primary key,
+  player_id int generated as identity constraint PK_player primary key,
   name varchar(64) unique,
   gold int,
   kills int,
@@ -328,19 +328,6 @@ create table adventure_session(
 -------------------- PROJEKT 3 --------------------
 --------------- TRIGGER A PROCEDURA ---------------
 
--- TRIGGER na generovanie primarnych klucov v tabulke Player
-CREATE SEQUENCE  player_seq  NOCACHE;
-
-CREATE or replace TRIGGER  Player_PK
-  BEFORE INSERT ON  PLAYER
-  FOR EACH ROW
-DECLARE
-BEGIN
-  IF :NEW.player_id  IS NULL THEN
-    :new.player_id := player_seq.nextval;
-  END IF;
-END;
-
 --drop procedure who_is_rich;
 -- PROCEDURA na vypis hracov, ktory maju viacej zlata, ako je priemer
 CREATE OR REPLACE PROCEDURE who_is_rich AS
@@ -364,6 +351,43 @@ BEGIN
 end who_is_rich;
 
 -------------------- PROJEKT 2 --------------------
+-- Trigger: check if kill count is >= 0
+CREATE OR REPLACE TRIGGER player_kills
+  BEFORE INSERT OR UPDATE OF kills ON player
+  FOR EACH ROW
+BEGIN
+  IF :NEW.kills < 0
+  THEN
+    RAISE_APPLICATION_ERROR(-20002, 'Number of kills can not be lower than 0');
+  END IF;
+END;
+
+-- TRIGGER na generovanie primarnych klucov v tabulke Enemy
+DROP SEQUENCE enemy_seq;
+CREATE SEQUENCE  enemy_seq  NOCACHE;
+CREATE or replace TRIGGER enemy_PK
+  BEFORE INSERT ON ENEMY
+  FOR EACH ROW
+DECLARE
+BEGIN
+  IF :NEW.element_id IS NULL THEN
+    :new.element_id := enemy_seq.nextval;
+  END IF;
+END;
+
+-- TRIGGER na generovanie primarnych klucov v tabulke Map
+DROP SEQUENCE map_seq;
+CREATE SEQUENCE  map_seq  NOCACHE;
+CREATE or replace TRIGGER map_PK
+  BEFORE INSERT ON MAP
+  FOR EACH ROW
+DECLARE
+BEGIN
+  IF :NEW.element_id IS NULL THEN
+    :new.element_id := enemy_seq.nextval;
+  END IF;
+END;
+
 -- INSERTING DUMMY DATA
 INSERT INTO PLAYER ("NAME", "GOLD", "KILLS", "PASSWORD") VALUES ('Alex', 12, 6, '$2b$12$fVF90LTwy1JcaMK5TdyTfuuIae5uCBaO9ChOGMhn/oEfBr7XwJjeu');
 INSERT INTO LOCATION ("NAME") VALUES ('Lost woods');
@@ -481,8 +505,7 @@ SELECT * FROM CHARACTER
 -------------------- PROJEKT 4 --------------------
 
 -------------- EXPLAIN PLAN A INDEX ---------------
--- INDEX: Dotaz - vyber hracovej postavy s najvyssim levelom
-DROP INDEX  index_postavy;
+-- INDEX: Dotaz - vyber hracovej postavy s najvyssim levelom;
 
 EXPLAIN PLAN FOR
   SELECT PLAYER.name as player_name, CHARACTER.name as character_name, CHARACTER."level" from CHARACTER
@@ -530,5 +553,50 @@ SELECT PLAYER.player_id, PLAYER.name from PLAYER;
 BEGIN
   who_is_rich();
 END;
+
+--------------------------------------------------------------------------------------------------------
+
+-- Procedure: Procedure inserts into 'wrong' table list of characters with wrong class
+CREATE OR REPLACE PROCEDURE wrong_class AS
+    CURSOR characters IS SELECT * FROM character;
+    i NUMBER;
+    p characters%ROWTYPE;
+BEGIN
+    i := 0;
+    OPEN characters;
+    LOOP
+        FETCH characters INTO p; -- nacteni radku z kurzoru
+        EXIT WHEN characters%NOTFOUND; -- ukoncujici podminka cyklu
+        IF p.class NOT LIKE 'Barbarian' AND
+            p.class NOT LIKE 'Bard' AND
+            p.class NOT LIKE 'Cleric' AND
+            p.class NOT LIKE 'Druid' AND
+            p.class NOT LIKE 'Fighter' AND
+            p.class NOT LIKE 'Monk' AND
+            p.class NOT LIKE 'Paladin' AND
+            p.class NOT LIKE 'Ranger' AND
+            p.class NOT LIKE 'Rogue' AND
+            p.class NOT LIKE 'Sorcerer' AND
+            p.class NOT LIKE 'Warlock' AND
+            p.class NOT LIKE 'Wizard'
+        THEN
+        dbms_output.put_line(p.name || ' ' || p.class);
+        i := i + 1;
+    END IF;
+END LOOP;
+CLOSE characters;
+END;
+
+
+-- PROCEDURE CALL, Procedure inserts into 'wrong' table list of characters with wrong class
+BEGIN
+    wrong_class();
+END;
+
+-- valid
+INSERT INTO PLAYER ("NAME", "GOLD", "KILLS", "PASSWORD") VALUES ('Valid', 42, 3, '$2b$12$fVF90LTwy1JcaMK5TdyTfuuIae5uCBaO9ChOGMhn/oEfBr7XwJjeu');
+
+-- invalid
+INSERT INTO PLAYER ("NAME", "GOLD", "KILLS", "PASSWORD") VALUES ('Invalid', 42, -4, '$2b$12$fVF90LTwy1JcaMK5TdyTfuuIae5uCBaO9ChOGMhn/oEfBr7XwJjeu');
 
 COMMIT
