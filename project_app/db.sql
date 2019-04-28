@@ -171,8 +171,7 @@ EXCEPTION
 END;
 
 DROP SEQUENCE player_seq;
-drop table strings;
-drop procedure who_is_rich;
+DROP PROCEDURE who_is_rich;
 
 -- CREATING TABLES
 create table player(
@@ -317,12 +316,8 @@ create table adventure_session(
   FOREIGN KEY (adventure_id) REFERENCES adventure(adventure_id) ON DELETE CASCADE
 );
 
-
-create table strings(
-  id int generated as identity constraint PK_vysledok primary key,
-  vysledok varchar(255)
-);
-
+-------------------- PROJEKT 3 --------------------
+--------------- TRIGGER A PROCEDURA ---------------
 
 -- TRIGGER na generovanie primarnych klucov v tabulke Player
 CREATE SEQUENCE  player_seq  NOCACHE;
@@ -359,7 +354,7 @@ BEGIN
 
 end who_is_rich;
 
-
+-------------------- PROJEKT 2 --------------------
 -- INSERTING DUMMY DATA
 INSERT INTO PLAYER ("NAME", "GOLD", "KILLS", "PASSWORD") VALUES ('Alex', 12, 6, '$2b$12$fVF90LTwy1JcaMK5TdyTfuuIae5uCBaO9ChOGMhn/oEfBr7XwJjeu');
 INSERT INTO LOCATION ("NAME") VALUES ('Lost woods');
@@ -421,6 +416,9 @@ INSERT INTO ENEMY ("RACE_ID", "level") VALUES (1, 2);
 INSERT INTO ADVENTURE_GAME_ELEMENT ("GAME_ELEMENT", "ADVENTURE_ID") VALUES (3, 2);
 INSERT INTO ADVENTURE_GAME_ELEMENT ("GAME_ELEMENT", "ADVENTURE_ID") VALUES (4, 2);
 
+
+-------------------- PROJEKT 3--------------------
+
 -- dotaz vyuzivajuci spojenie 2 tabuliek
   -- vyber hracovej postavy s najvyssim levelom
 SELECT PLAYER.name as player_name, CHARACTER.name as character_name, CHARACTER."level" from CHARACTER
@@ -471,11 +469,9 @@ SELECT * FROM CHARACTER
            SESSIONS."date" BETWEEN TO_DATE('1.3.2019', 'dd.mm.yyyy') AND TO_DATE('1.4.2019', 'dd.mm.yyyy')
    );
 
---SET serveroutput ON;
-BEGIN
-  who_is_rich();
-END;
+-------------------- PROJEKT 4 --------------------
 
+-------------- EXPLAIN PLAN A INDEX ---------------
 -- INDEX: Dotaz - vyber hracovej postavy s najvyssim levelom
 DROP INDEX  index_postavy;
 
@@ -498,5 +494,32 @@ EXPLAIN PLAN FOR
 SELECT PLAN_TABLE_OUTPUT
   FROM TABLE(DBMS_XPLAN.DISPLAY());
 
+------------ PRISTUPOVE PRAVA -----------------
+GRANT INSERT, DELETE ON ADVENTURE TO XSLEZA20;
+GRANT INSERT, DELETE ON AUTHOR TO XSLEZA20;
+GRANT INSERT, DELETE ON CAMPAIGN TO XSLEZA20;
+GRANT INSERT, DELETE, SELECT ON CHARACTER TO XSLEZA20;
+GRANT INSERT, DELETE, SELECT ON DEATH TO XSLEZA20;
+GRANT INSERT, DELETE, SELECT ON ENEMY TO XSLEZA20;
+GRANT INSERT, DELETE, SELECT ON EQUIPMENT TO XSLEZA20;
+GRANT INSERT, DELETE ON GAME_ELEMENT TO XSLEZA20;
+GRANT INSERT, DELETE ON LOCATION TO XSLEZA20;
+GRANT INSERT, DELETE ON MAP TO XSLEZA20;
+GRANT ALL ON PLAYER TO XSLEZA20;
+GRANT ALL ON RACE TO XSLEZA20;
+GRANT INSERT, DELETE ON SESSIONS TO XSLEZA20;
+
+-------------- DEMONSTRACIA ------------------
+
+--- Trigger na automaticke generovanie hodnot primarneho kluca
+SELECT PLAYER.player_id, PLAYER.name from PLAYER;
+INSERT INTO PLAYER ("NAME", "GOLD", "KILLS") VALUES ('Adam', 56, 2);
+SELECT PLAYER.player_id, PLAYER.name from PLAYER;
+
+--- Procedura -> vypis vsetkych hracov, ktory maju viacej zlata ako je priemer
+-- SET serveroutput ON;
+BEGIN
+  who_is_rich();
+END;
 
 COMMIT
