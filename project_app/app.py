@@ -1,5 +1,6 @@
 from flask import Flask, flash, render_template, url_for, redirect
 from model import PlayerInsertForm, AdventureInsertForm, CharacterInsertForm, SessionInsertForm, SignInForm, model, User
+from model import AuthorInsertForm, EnemyInsertForm, EquipmentInsertForm, MapInsertForm
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 
@@ -130,7 +131,7 @@ def unauthorized():
 @app.route('/delete-player/<player_id>')
 @login_required
 def delete_player(player_id):
-    if current_user["role"] == "admin":
+    if current_user.get_role() == "admin":
         model.delete_row("player", player_id)
         return redirect(url_for('players'))
     else:
@@ -176,6 +177,44 @@ def character_add(player_id=1):
                                    "level": form.level.data, "player_id": form.player.data})
         return redirect(url_for('players'))
     return render_template("character_add.html", form=form)
+
+
+@app.route('/admin/', methods=('GET', 'POST'))
+@login_required
+def admin():
+    if current_user.get_role() != "admin":
+        flash("Sem nesmíte", "danger")
+        return redirect(url_for('index'))
+
+    forms = {}
+
+    forms["author"] = AuthorInsertForm.AuthorInsertForm()
+    if forms["author"].validate_on_submit():
+        model.insert("author", {"name": forms["author"].name.data})
+        return redirect(url_for('admin'))
+
+    forms["equipment"] = EquipmentInsertForm.EquipmentInsertForm()
+    if forms["equipment"].validate_on_submit():
+        model.insert("equipment", {"type": forms["equipment"].type.data})
+        return redirect(url_for('admin'))
+
+    forms["enemy"] = EnemyInsertForm.EnemyInsertForm()
+    forms["enemy"].race.choices = model.get_pairs('race')
+    if forms["enemy"].validate_on_submit():
+        model.insert("game_element", {"name": forms["enemy"].name.data})
+        element_id = model.get_last_element_id()
+        model.insert("enemy", {"element_id": element_id, "level": forms["enemy"].level.data,
+                               "race_id": forms["enemy"].race.data})
+        return redirect(url_for('admin'))
+
+    forms["maps"] = MapInsertForm.MapInsertForm()
+    if forms["maps"].validate_on_submit():
+        model.insert("game_element", {"name": forms["maps"].name.data})
+        element_id = model.get_last_element_id()
+        model.insert("map", {"scale": forms["maps"].scale.data, "element_id": element_id})
+        return redirect(url_for('admin'))
+
+    return render_template("admin.html", forms=forms)
 
 
 @app.route('/sign-up', methods=('GET', 'POST'))

@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block content %}
+
+    <div class="container">
+        {% include "header.html" %}
+        <h1 class="text-center">Administrace</h1>
+        <div class="row">
+            <div class="col-3">
+                <h2>Autori</h2>
+                <form method="POST" enctype="multipart/form-data">
+                    {% for fieldName, errorMessages in forms["author"].errors.items() %}
+                        {% for err in errorMessages %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ fieldName }}: {{ err }}
+                        </div>
+                        {% endfor %}
+                    {% endfor %}
+                    {{ forms["author"].csrf_token }}
+                    <div class="form-group">
+                        {{ forms["author"].name.label }}
+                        {{ forms["author"].name(class_="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ forms["author"].submit(class_="form-control btn btn-success") }}
+                    </div>
+                </form>
+            </div>
+            <div class="col-3">
+                <h2>Vybavení</h2>
+                <form method="POST" enctype="multipart/form-data">
+                    {% for fieldName, errorMessages in forms["equipment"].errors.items() %}
+                        {% for err in errorMessages %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ fieldName }}: {{ err }}
+                        </div>
+                        {% endfor %}
+                    {% endfor %}
+                    {{ forms["equipment"].csrf_token }}
+                    <div class="form-group">
+                        {{ forms["equipment"].type.label }}
+                        {{ forms["equipment"].type(class_="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ forms["equipment"].submit(class_="form-control btn btn-success") }}
+                    </div>
+                </form>
+            </div>
+            <div class="col-3">
+                <h2>Mapy</h2>
+                <form method="POST" enctype="multipart/form-data">
+                    {% for fieldName, errorMessages in forms["author"].errors.items() %}
+                        {% for err in errorMessages %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ fieldName }}: {{ err }}
+                        </div>
+                        {% endfor %}
+                    {% endfor %}
+                    {{ forms["maps"].csrf_token }}
+                    <div class="form-group">
+                        {{ forms["maps"].name.label }}
+                        {{ forms["maps"].name(class_="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ forms["maps"].scale.label }}
+                        {{ forms["maps"].scale(class_="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ forms["maps"].submit(class_="form-control btn btn-success") }}
+                    </div>
+                </form>
+            </div>
+            <div class="col-3">
+                <h2>Nepřátelé</h2>
+                <form method="POST" enctype="multipart/form-data">
+                    {% for fieldName, errorMessages in forms["enemy"].errors.items() %}
+                        {% for err in errorMessages %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ fieldName }}: {{ err }}
+                        </div>
+                        {% endfor %}
+                    {% endfor %}
+                    {{ forms["enemy"].csrf_token }}
+                    <div class="form-group">
+                        {{ forms["enemy"].name.label }}
+                        {{ forms["enemy"].name(class_="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ forms["enemy"].level.label }}
+                        {{ forms["enemy"].level(class_="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ forms["enemy"].race.label }}
+                        {{ forms["enemy"].race(class_="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ forms["enemy"].submit(class_="form-control btn btn-success") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

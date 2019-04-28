@@ -63,6 +63,15 @@ EXCEPTION
 END;
 
 BEGIN
+   EXECUTE IMMEDIATE 'DROP TABLE ' || 'wrong';
+EXCEPTION
+   WHEN OTHERS THEN
+      IF SQLCODE != -942 THEN
+         RAISE;
+      END IF;
+END;
+
+BEGIN
    EXECUTE IMMEDIATE 'DROP TABLE ' || 'character';
 EXCEPTION
    WHEN OTHERS THEN
@@ -268,7 +277,7 @@ create table game_element(
 
 create table map(
   scale varchar(64),
-  element_id int generated as identity constraint PK_map primary key,
+  element_id int constraint PK_map primary key,
   CONSTRAINT FK_Map FOREIGN KEY (element_id) REFERENCES game_element ON DELETE CASCADE
 );
 
@@ -276,7 +285,7 @@ create table enemy(
   race_id int,
   CONSTRAINT FK_enemy_race FOREIGN KEY (race_id) REFERENCES race(race_id),
   "level" int,
-  element_id int generated as identity constraint PK_enemy primary key,
+  element_id int constraint PK_enemy primary key,
   CONSTRAINT FK_Enemy FOREIGN KEY (element_id) REFERENCES game_element ON DELETE CASCADE
 );
 
@@ -359,8 +368,8 @@ end who_is_rich;
 INSERT INTO PLAYER ("NAME", "GOLD", "KILLS", "PASSWORD") VALUES ('Alex', 12, 6, '$2b$12$fVF90LTwy1JcaMK5TdyTfuuIae5uCBaO9ChOGMhn/oEfBr7XwJjeu');
 INSERT INTO LOCATION ("NAME") VALUES ('Lost woods');
 INSERT INTO DEATH ("date", "LOCATION_ID") VALUES (TO_DATE('2015/05/03 21:02:44', 'yyyy/mm/dd hh24:mi:ss'), 1);
-INSERT INTO RACE ("NAME", "IMAGE", "DESCRIPTION") VALUES ('Elf', 'images/race/elf.png', 'Elfové jsou magičtí lidé z jiných světů, kteří žijí ve světě, ale nejsou jeho součástí. Žijí v místech éterické krásy, uprostřed prastarých lesů nebo ve stříbřitých věžích, které se třpytí světlem luštěnin, kde se vzduchem rozlévá jemná hudba a jemný vůně vane. Zbarvení elfů zahrnuje normální lidský rozsah a zahrnuje také kůži v odstínech mědi, bronzu a téměř modrobílé, vlasy zelené nebo modré a oči jako kaluže tekutého zlata nebo stříbra.');
-INSERT INTO RACE ("NAME", "IMAGE", "DESCRIPTION") VALUES ('Dwarf', 'images/race/dwarf.png', 'Království bohaté na prastarou majestátnost, sály vytesané do kořenů hor, ozvěny výběhů a kladiv v hlubokých dolech a planoucí kovárny - tyto společné nitě spojují všechny trpaslíky. Trpaslíci mohou žít více než 400 let, takže nejstarší žijící trpaslíci si často pamatují velmi odlišný svět. Například někteří z nejstarších trpaslíků žijících v citadele Felbarru si možná vzpomenou na den, kdy orkové dobyli pevnost a vzali je do exilu, který trval více než 250 let.');
+INSERT INTO RACE ("NAME", "IMAGE", "DESCRIPTION") VALUES ('Elf', '/static/images/race/elf.png', 'Elfové jsou magičtí lidé z jiných světů, kteří žijí ve světě, ale nejsou jeho součástí. Žijí v místech éterické krásy, uprostřed prastarých lesů nebo ve stříbřitých věžích, které se třpytí světlem luštěnin, kde se vzduchem rozlévá jemná hudba a jemný vůně vane. Zbarvení elfů zahrnuje normální lidský rozsah a zahrnuje také kůži v odstínech mědi, bronzu a téměř modrobílé, vlasy zelené nebo modré a oči jako kaluže tekutého zlata nebo stříbra.');
+INSERT INTO RACE ("NAME", "IMAGE", "DESCRIPTION") VALUES ('Dwarf', '/static/images/race/dwarf.png', 'Království bohaté na prastarou majestátnost, sály vytesané do kořenů hor, ozvěny výběhů a kladiv v hlubokých dolech a planoucí kovárny - tyto společné nitě spojují všechny trpaslíky. Trpaslíci mohou žít více než 400 let, takže nejstarší žijící trpaslíci si často pamatují velmi odlišný svět. Například někteří z nejstarších trpaslíků žijících v citadele Felbarru si možná vzpomenou na den, kdy orkové dobyli pevnost a vzali je do exilu, který trval více než 250 let.');
 INSERT INTO RACE ("NAME", "IMAGE", "DESCRIPTION") VALUES ('Gnome', '/static/images/race/gnome.png', 'Trvalé hučení rušných činností proniká do válek a sousedství, kde trpaslíci utvářejí své blízké komunity. Hlučné zvuky přerušují ostřejší zvuky: tu je broušení broušených ozubených kol, menší výbuch, kvílení překvapení nebo triumfu, a zejména výbuchy smíchu. Gnomové se radují ze života, užívají si každý okamžik vynálezu, zkoumání, vyšetřování, stvoření a hry. Vousy mužského gnome, na rozdíl od jeho divokých vlasů, jsou pečlivě zastřižené, ale často stylizované do zvědavých vidlic nebo úhledných bodů.');
 INSERT INTO RACE ("NAME", "IMAGE", "DESCRIPTION") VALUES ('Dragonborn', '/static/images/race/dragonborn.png', 'Narozený z draků, jak jejich jméno prohlašuje, dragonborn pyšně prochází světem, který je přivítá strašlivým nepochopením. Ve tvaru drakonických bohů nebo samotných draků se dragonborn původně vylíhl z drakových vajec jako jedinečná rasa, kombinující nejlepší vlastnosti draků a humanoidů. Někteří dragonborn jsou věrní služebníci opravdovým drakům, jiní tvoří řady vojáků ve velkých válkách, a jiní se ocitnou v nouzi, s jasným povoláním v životě.');
 INSERT INTO RACE ("NAME", "IMAGE", "DESCRIPTION") VALUES ('Human', '/static/images/race/human.png', 'Ve většině světových výpočtů jsou lidé nejmladší ze společných ras, pozdě na světě, a krátkotrvající ve srovnání s trpaslíky, elfy a draky. Možná je to kvůli jejich kratším životům, že se snaží dosáhnout co nejvíce let. Nebo snad cítí, že mají něco, co mohou udělat pro starší rasy, a proto stavět své mocné říše na základech dobývání a obchodu. Bez ohledu na to, co je řídí, jsou lidé inovátory, úspěchy a průkopníci světů.');

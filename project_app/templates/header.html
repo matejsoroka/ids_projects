@@ -18,6 +18,11 @@
                     <li>
                         <a class="nav-link" href="/player/{{ current_user['id'] }}"> {{current_user["name"]}} </a>
                     </li>
+                    {% if current_user["role"] == "admin" %}
+                    <li>
+                        <a class="nav-link" href="/admin/"> Admin </a>
+                    </li>
+                    {% endif %}
                     <li>
                         <a class="nav-link" href="/logout"><i class="fas fa-sign-out-alt"></i></a>
                     </li>
