@@ -195,6 +195,24 @@ header {
     font-family: "Lato Regular";
 }
 
+/*drak v dobrodruzstvach, dobrodruzstve, sedeniach*/
+#drak_adv {
+    height: 200px;
+    width: auto;
+}
+
+/*drak v sessions*/
+#drak {
+    height: 200px;
+    width: auto;
+    margin-right: 10px;
+}
+
+/*button v dobrodruzstvach na pridanie*/
+#btn_adv {
+    margin-top: 135px;
+}
+
 /*buttons*/
 .button{
     margin-right: 20px;
@@ -293,11 +311,11 @@ h3 a:hover {
 
 .character-text {
     height: 600px;
-    padding-top: 100px;
+    padding-top: 125px;
 }
 
 .character-text .char-par {
-    margin-bottom: 20px;
+    margin: 20px 0;
     padding: 10px 0;
 }
 
@@ -313,7 +331,7 @@ h3 a:hover {
 }
 
 #char-btn {
-    margin-top: 30px;
+    margin-top: 25px;
     width: 100%;
 }
 
@@ -327,7 +345,7 @@ label {
     color: #ffec7c;
     text-transform: uppercase;
     margin-bottom: 0;
-	font-size: .83em;
+	font-size: 1.2em;
 }
 
 .adv-title {
@@ -351,6 +369,7 @@ label {
 /*button v dobrodruzstvach*/
 #form-btn {
     width: 100%;
+    padding: 0 20px;
 }
 
 .button-form {

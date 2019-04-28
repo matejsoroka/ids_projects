@@ -111,9 +111,12 @@ def adventure_add():
 @app.route('/delete-adventure/<adventure_id>')
 @login_required
 def delete_adventure(adventure_id):
-    model.delete_row('adventure', adventure_id)
-    model.db.commit()
-    return redirect(url_for('adventures'))
+    if current_user.get_role() == "admin":
+        model.delete_row('adventure', adventure_id)
+        return redirect(url_for('adventures'))
+    else:
+        flash("Na tuto operaci nemáte oprávnění", "danger")
+        return redirect(url_for('index'))
 
 
 @app.route('/players')
@@ -167,16 +170,23 @@ def character(character_id):
 
 @app.route('/character-add/', methods=('GET', 'POST'))
 @app.route('/character-add/<player_id>', methods=('GET', 'POST'))
-def character_add(player_id=1):
-    form = CharacterInsertForm.CharacterInsertForm()
-    form.player.choices = model.get_pairs('player')
-    form.race.choices = model.get_pairs('race')
-    form.player.process_data(player_id)
-    if form.validate_on_submit():
-        model.insert("character", {"name": form.name.data, "race": form.race.data, "class": form.c_class.data,
-                                   "level": form.level.data, "player_id": form.player.data})
-        return redirect(url_for('players'))
-    return render_template("character_add.html", form=form)
+def character_add(player_id=None):
+    user_id = current_user.get_id()
+
+    if current_user.get_role() == "admin" or user_id == player_id:
+        form = CharacterInsertForm.CharacterInsertForm()
+        form.player.choices = model.get_pairs('player')
+        form.race.choices = model.get_pairs('race')
+        form.player.process_data(player_id)
+        if form.validate_on_submit():
+            model.insert("character", {"name": form.name.data, "race": form.race.data, "class": form.c_class.data,
+                                       "level": form.level.data, "player_id": form.player.data})
+            return redirect(url_for('players'))
+        return render_template("character_add.html", form=form)
+
+    elif user_id != player_id:
+        flash("Sem nesmíte", "danger")
+        return redirect(url_for('index'))
 
 
 @app.route('/admin/', methods=('GET', 'POST'))
