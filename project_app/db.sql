@@ -582,12 +582,19 @@ GRANT ALL ON PLAYER TO XSLEZA20;
 GRANT ALL ON RACE TO XSLEZA20;
 GRANT INSERT, DELETE ON SESSIONS TO XSLEZA20;
 
--------------- DEMONSTRACIA ------------------
-
+-- trigger test
 --- Trigger na automaticke generovanie hodnot primarneho kluca
 SELECT PLAYER.player_id, PLAYER.name from PLAYER;
 INSERT INTO PLAYER ("NAME", "GOLD", "KILLS") VALUES ('Adam', 56, 2);
 SELECT PLAYER.player_id, PLAYER.name from PLAYER;
+
+-- valid
+INSERT INTO GAME_ELEMENT ("NAME") VALUES ('New map');
+INSERT INTO MAP ("SCALE", "ELEMENT_ID") SELECT '1:500', element_id FROM GAME_ELEMENT g WHERE g.name='New map';
+
+-- invalid
+INSERT INTO GAME_ELEMENT ("NAME") VALUES ('New map 2');
+INSERT INTO MAP ("SCALE", "ELEMENT_ID") SELECT '1nv4l1d:sc4l3', element_id FROM GAME_ELEMENT g WHERE g.name='New map 2';
 
 --- Procedura -> vypis vsetkych hracov, ktory maju viacej zlata ako je priemer
 -- SET serveroutput ON;
@@ -600,15 +607,6 @@ BEGIN
     wrong_class();
 END;
 
-
--- trigger test
--- valid
-INSERT INTO GAME_ELEMENT ("NAME") VALUES ('New map');
-INSERT INTO MAP ("SCALE", "ELEMENT_ID") SELECT '1:500', element_id FROM GAME_ELEMENT g WHERE g.name='New map';
-
--- invalid
-INSERT INTO GAME_ELEMENT ("NAME") VALUES ('New map 2');
-INSERT INTO MAP ("SCALE", "ELEMENT_ID") SELECT '1nv4l1d:sc4l3', element_id FROM GAME_ELEMENT g WHERE g.name='New map 2';
 
 -- for xsleza20
 
