@@ -548,21 +548,21 @@ SELECT * FROM CHARACTER
 -------------- EXPLAIN PLAN A INDEX ---------------
 -- INDEX: Dotaz - vyber hracovej postavy s najvyssim levelom;
 EXPLAIN PLAN FOR
-  SELECT PLAYER.name as player_name, CHARACTER.name as character_name, CHARACTER."level" from CHARACTER
-  join PLAYER on CHARACTER.player_id = PLAYER.player_id
-  where CHARACTER."level" = ALL
-    (SELECT max(CHARACTER."level") from CHARACTER where CHARACTER.player_id = PLAYER.player_id);
+  SELECT c.NAME, COUNT(*) as character_count FROM PLAYER p, CHARACTER c
+  WHERE p.PLAYER_ID = c.PLAYER_ID AND p.role='admin'
+  GROUP BY c.NAME
+  ORDER BY character_count DESC;
 SELECT PLAN_TABLE_OUTPUT
 FROM TABLE(DBMS_XPLAN.DISPLAY());
 
 -- vytvorenie indexu
-CREATE INDEX index_postavy ON CHARACTER(NAME);
+CREATE INDEX admin_index ON PLAYER(role);
 
 EXPLAIN PLAN FOR
-  SELECT PLAYER.name as player_name, CHARACTER.name as character_name, CHARACTER."level" from CHARACTER
-  join PLAYER on CHARACTER.player_id = PLAYER.player_id
-  where CHARACTER."level" = ALL
-    (SELECT max(CHARACTER."level") from CHARACTER where CHARACTER.player_id = PLAYER.player_id);
+  SELECT c.NAME, COUNT(*) as character_count FROM PLAYER p, CHARACTER c
+  WHERE p.PLAYER_ID = c.PLAYER_ID AND p.role='admin'
+  GROUP BY c.NAME
+  ORDER BY character_count DESC;
 SELECT PLAN_TABLE_OUTPUT
 FROM TABLE(DBMS_XPLAN.DISPLAY());
 
