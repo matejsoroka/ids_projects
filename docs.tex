@@ -36,9 +36,19 @@ Spolu s triggrom je vytvorená aj sekvencia, ktora zaručuje unikátnosť vygene
 
 \section{Procedúry}
 \subsection{wrong\_class}
-Procedúra pre overenie správnosti povolaní vytvorených postáv v tabuľke \texttt{CHARACTER}. Procedúra preiteruje celú tabuľku s pomocou premennej \texttt{characters\%ROWTYPE}, ktorá v každej iterácií obsahuje iterovaný riadok z tabuľky. Pri každej iterácií porovnáva reťazec uložený v stĺpci \texttt{class}. Ak sa hodnota v stĺpci nerovná jednej zo \href{https://www.dndbeyond.com/classes}{všeobecne známych povolaní}, procedúra uživateľa vypíše.
+Procedúra pre overenie správnosti povolaní vytvorených postáv v tabuľke \texttt{CHARACTER}. Procedúra preiteruje celú tabuľku s pomocou premennej \texttt{characters\%ROWTYPE}, ktorá v každej iterácií obsahuje iterovaný riadok z tabuľky. Pri každej iterácií porovnáva reťazec uložený v stĺpci \texttt{class}. Ak sa hodnota v stĺpci nerovná jednej zo \href{https://www.dndbeyond.com/classes}{všeobecne známych povolaní}, procedúra uživateľa vypíše sa.
 
 \subsection{who\_is\_rich}
 Procedúra pomocou agregačnej funcie \texttt{avg} vypočíta aritmetický priemer hodnoty reprezentujúcej priemerný počet zlata stĺpca \texttt{gold} v tabuľke \texttt{PLAYER}, ktorý hráč vlastní. Hodnotu uloží do premennej. Následne procecúra preiteruje tabuľku \texttt{PLAYER} a porovnáva priemernú hodnotu s hodnotou v stĺpci \texttt{gold}, v prípade že je hodnota v stĺpci vačšia ako hodnota v premennej obsahujúcej priemer, hráč sa označí ako objektívne bohatší k väčšine a vypíše.
+
+\section{Explain plan a index}
+Select nám vyhľadáva počet postáv vlastnených administrátormi, kedže administrátor je podmnožina hráča, tak jeho informácie sú uložené v tabuľke \texttt{PLAYER} s jediným rozdielom, a tým je hodnota v stĺpci \texttt{role}, kde hodnota reprezentuje rolu daného hráča. Keďže rola je reťazec, tak je vhodné z neho vytvoriť index.
+
+\subsection{Pred zavedením indexu}
+\includegraphics[origin=c,scale=0.5]{explain}\\
+
+\subsection{Po zavedení indexu}
+Pri použití indexu nám klesla výpočetná náročnost a množstvo alokovanej pamäte.\\
+\includegraphics[origin=c,scale=0.5]{explain_second}
 
 \end{document}
