@@ -81,6 +81,15 @@ EXCEPTION
 END;
 
 BEGIN
+   EXECUTE IMMEDIATE 'DROP TABLE ' || 'sessions';
+EXCEPTION
+   WHEN OTHERS THEN
+      IF SQLCODE != -942 THEN
+         RAISE;
+      END IF;
+END;
+
+BEGIN
    EXECUTE IMMEDIATE 'DROP TABLE ' || 'player';
 EXCEPTION
    WHEN OTHERS THEN
@@ -162,15 +171,6 @@ EXCEPTION
 END;
 
 BEGIN
-   EXECUTE IMMEDIATE 'DROP TABLE ' || 'sessions';
-EXCEPTION
-   WHEN OTHERS THEN
-      IF SQLCODE != -942 THEN
-         RAISE;
-      END IF;
-END;
-
-BEGIN
    EXECUTE IMMEDIATE 'DROP TABLE ' || 'race';
 EXCEPTION
    WHEN OTHERS THEN
@@ -179,12 +179,9 @@ EXCEPTION
       END IF;
 END;
 
--- DROP SEQUENCE player_seq;
--- DROP PROCEDURE who_is_rich;
-
 -- CREATING TABLES
 create table player(
-  player_id int generated as identity constraint PK_player primary key,
+  player_id int constraint PK_player primary key,
   name varchar(64) unique,
   gold int,
   kills int,
@@ -327,10 +324,7 @@ create table adventure_session(
   FOREIGN KEY (adventure_id) REFERENCES adventure(adventure_id) ON DELETE CASCADE
 );
 
--------------------- PROJEKT 3 --------------------
---------------- TRIGGER A PROCEDURA ---------------
-
---drop procedure who_is_rich;
+--------------- TRIGGERY A PROCEDURY ---------------
 -- PROCEDURA na vypis hracov, ktory maju viacej zlata, ako je priemer
 CREATE OR REPLACE PROCEDURE who_is_rich AS
   CURSOR players IS SELECT * FROM PLAYER;
@@ -349,18 +343,49 @@ BEGIN
     end if;
   end loop;
   CLOSE players;
-
 end who_is_rich;
 
--------------------- PROJEKT 2 --------------------
+
+-- Procedura vypise postavy so zlym povolanim
+CREATE OR REPLACE PROCEDURE wrong_class AS
+    CURSOR characters IS SELECT * FROM character;
+    i NUMBER;
+    p characters%ROWTYPE;
+BEGIN
+    i := 0;
+    OPEN characters;
+    LOOP
+        FETCH characters INTO p; -- nacteni radku z kurzoru
+        EXIT WHEN characters%NOTFOUND; -- ukoncujici podminka cyklu
+        IF p.class NOT LIKE 'Barbarian' AND
+            p.class NOT LIKE 'Bard' AND
+            p.class NOT LIKE 'Cleric' AND
+            p.class NOT LIKE 'Druid' AND
+            p.class NOT LIKE 'Fighter' AND
+            p.class NOT LIKE 'Monk' AND
+            p.class NOT LIKE 'Paladin' AND
+            p.class NOT LIKE 'Ranger' AND
+            p.class NOT LIKE 'Rogue' AND
+            p.class NOT LIKE 'Sorcerer' AND
+            p.class NOT LIKE 'Warlock' AND
+            p.class NOT LIKE 'Wizard'
+        THEN
+        dbms_output.put_line(p.name || ' ' || p.class);
+        i := i + 1;
+    END IF;
+END LOOP;
+CLOSE characters;
+END;
+
 -- Trigger: check if kill count is >= 0
-CREATE OR REPLACE TRIGGER player_kills
-  BEFORE INSERT OR UPDATE OF kills ON player
+-- DROP TRIGGER map_scale;
+CREATE OR REPLACE TRIGGER map_scale
+  BEFORE INSERT OR UPDATE OF scale ON map
   FOR EACH ROW
 BEGIN
-  IF :NEW.kills < 0
+  IF NOT REGEXP_LIKE(:NEW.scale, '(\d)+:(\d)+')
   THEN
-    RAISE_APPLICATION_ERROR(-20002, 'Number of kills can not be lower than 0');
+    RAISE_APPLICATION_ERROR(-20002, 'Invalid map scale, use (\d)+:(\d)+ format');
   END IF;
 END;
 
@@ -389,6 +414,20 @@ BEGIN
     :new.element_id := enemy_seq.nextval;
   END IF;
 END;
+
+-- TRIGGER na generovanie primarnych klucov v tabulke Player
+CREATE or REPLACE SEQUENCE  player_seq  NOCACHE;
+CREATE or replace TRIGGER  Player_PK
+  BEFORE INSERT ON  PLAYER
+  FOR EACH ROW
+DECLARE
+BEGIN
+  IF :NEW.player_id  IS NULL THEN
+    :new.player_id := player_seq.nextval;
+  END IF;
+END;
+
+-------------------- PROJEKT 2 --------------------
 
 -- INSERTING DUMMY DATA
 INSERT INTO PLAYER ("NAME", "GOLD", "KILLS", "PASSWORD") VALUES ('Alex', 12, 6, '$2b$12$fVF90LTwy1JcaMK5TdyTfuuIae5uCBaO9ChOGMhn/oEfBr7XwJjeu');
@@ -427,7 +466,7 @@ INSERT INTO ADVENTURE_GAME_ELEMENT ("GAME_ELEMENT", "ADVENTURE_ID") VALUES (1, 1
 INSERT INTO GAME_ELEMENT ("NAME") VALUES ('Heraldo');
 INSERT INTO ENEMY ("RACE_ID", "level") VALUES (1, 15);
 INSERT INTO ADVENTURE_GAME_ELEMENT ("GAME_ELEMENT", "ADVENTURE_ID") VALUES (2, 1);
-INSERT INTO PLAYER ("NAME", "GOLD", "KILLS", "PASSWORD") VALUES ('Matej', 42, 3, '$2b$12$fVF90LTwy1JcaMK5TdyTfuuIae5uCBaO9ChOGMhn/oEfBr7XwJjeu');
+INSERT INTO PLAYER ("NAME", "GOLD", "KILLS", "PASSWORD", "ROLE") VALUES ('Matej', 42, 3, '$2b$12$fVF90LTwy1JcaMK5TdyTfuuIae5uCBaO9ChOGMhn/oEfBr7XwJjeu', 'admin');
 INSERT INTO LOCATION ("NAME") VALUES ('Forgotten dungeon');
 INSERT INTO EQUIPMENT ("TYPE") VALUES ('Sword');
 INSERT INTO EQUIPMENT ("TYPE") VALUES ('Bow');
@@ -508,14 +547,13 @@ SELECT * FROM CHARACTER
 
 -------------- EXPLAIN PLAN A INDEX ---------------
 -- INDEX: Dotaz - vyber hracovej postavy s najvyssim levelom;
-
 EXPLAIN PLAN FOR
   SELECT PLAYER.name as player_name, CHARACTER.name as character_name, CHARACTER."level" from CHARACTER
   join PLAYER on CHARACTER.player_id = PLAYER.player_id
   where CHARACTER."level" = ALL
     (SELECT max(CHARACTER."level") from CHARACTER where CHARACTER.player_id = PLAYER.player_id);
 SELECT PLAN_TABLE_OUTPUT
-  FROM TABLE(DBMS_XPLAN.DISPLAY());
+FROM TABLE(DBMS_XPLAN.DISPLAY());
 
 -- vytvorenie indexu
 CREATE INDEX index_postavy ON CHARACTER(NAME);
@@ -526,7 +564,7 @@ EXPLAIN PLAN FOR
   where CHARACTER."level" = ALL
     (SELECT max(CHARACTER."level") from CHARACTER where CHARACTER.player_id = PLAYER.player_id);
 SELECT PLAN_TABLE_OUTPUT
-  FROM TABLE(DBMS_XPLAN.DISPLAY());
+FROM TABLE(DBMS_XPLAN.DISPLAY());
 
 ------------ PRISTUPOVE PRAVA -----------------
 GRANT INSERT, DELETE ON ADVENTURE TO XSLEZA20;
@@ -557,70 +595,38 @@ BEGIN
   who_is_rich();
 END;
 
---------------------------------------------------------------------------------------------------------
-
--- Procedure: Procedure inserts into 'wrong' table list of characters with wrong class
-CREATE OR REPLACE PROCEDURE wrong_class AS
-    CURSOR characters IS SELECT * FROM character;
-    i NUMBER;
-    p characters%ROWTYPE;
-BEGIN
-    i := 0;
-    OPEN characters;
-    LOOP
-        FETCH characters INTO p; -- nacteni radku z kurzoru
-        EXIT WHEN characters%NOTFOUND; -- ukoncujici podminka cyklu
-        IF p.class NOT LIKE 'Barbarian' AND
-            p.class NOT LIKE 'Bard' AND
-            p.class NOT LIKE 'Cleric' AND
-            p.class NOT LIKE 'Druid' AND
-            p.class NOT LIKE 'Fighter' AND
-            p.class NOT LIKE 'Monk' AND
-            p.class NOT LIKE 'Paladin' AND
-            p.class NOT LIKE 'Ranger' AND
-            p.class NOT LIKE 'Rogue' AND
-            p.class NOT LIKE 'Sorcerer' AND
-            p.class NOT LIKE 'Warlock' AND
-            p.class NOT LIKE 'Wizard'
-        THEN
-        dbms_output.put_line(p.name || ' ' || p.class);
-        i := i + 1;
-    END IF;
-END LOOP;
-CLOSE characters;
-END;
-
-
--- PROCEDURE CALL, Procedure inserts into 'wrong' table list of characters with wrong class
+-- Procedure -> vypise vsetky postavy so zlym povolanim
 BEGIN
     wrong_class();
 END;
 
+
+-- trigger test
 -- valid
-INSERT INTO PLAYER ("NAME", "GOLD", "KILLS", "PASSWORD") VALUES ('Valid', 42, 3, '$2b$12$fVF90LTwy1JcaMK5TdyTfuuIae5uCBaO9ChOGMhn/oEfBr7XwJjeu');
+INSERT INTO GAME_ELEMENT ("NAME") VALUES ('New map');
+INSERT INTO MAP ("SCALE", "ELEMENT_ID") SELECT '1:500', element_id FROM GAME_ELEMENT g WHERE g.name='New map';
 
 -- invalid
--- INSERT INTO PLAYER ("NAME", "GOLD", "KILLS", "PASSWORD") VALUES ('Invalid', 42, -4, '$2b$12$fVF90LTwy1JcaMK5TdyTfuuIae5uCBaO9ChOGMhn/oEfBr7XwJjeu');
+INSERT INTO GAME_ELEMENT ("NAME") VALUES ('New map 2');
+INSERT INTO MAP ("SCALE", "ELEMENT_ID") SELECT '1nv4l1d:sc4l3', element_id FROM GAME_ELEMENT g WHERE g.name='New map 2';
 
 -- for xsleza20
 
-DROP MATERIALIZED VIEW death_count;
-CREATE MATERIALIZED VIEW death_count
-CACHE
-BUILD IMMEDIATE
-REFRESH ON COMMIT AS
-  SELECT XSOROK02.LOCATION.name, COUNT(*) as death_count FROM XSOROK02.death, XSOROK02.location
-  WHERE XSOROK02.LOCATION.location_id = XSOROK02.DEATH.location_id
-  GROUP BY XSOROK02.LOCATION.name
-  ORDER BY death_count DESC;
-
--- Preview:
-select * from death_count;
-INSERT INTO XSOROK02.DEATH ("date", "LOCATION_ID") VALUES (TO_DATE('2015/05/06 20:00:20', 'yyyy/mm/dd hh24:mi:ss'), 1);
-select * from death_count;
-COMMIT;
-select * from death_count;
-
-
+-- DROP MATERIALIZED VIEW death_count;
+-- CREATE MATERIALIZED VIEW death_count
+-- CACHE
+-- BUILD IMMEDIATE
+-- REFRESH ON COMMIT AS
+--   SELECT XSOROK02.LOCATION.name, COUNT(*) as death_count FROM XSOROK02.death, XSOROK02.location
+--   WHERE XSOROK02.LOCATION.location_id = XSOROK02.DEATH.location_id
+--   GROUP BY XSOROK02.LOCATION.name
+--   ORDER BY death_count DESC;
+--
+-- -- Preview:
+-- SELECT * FROM death_count;
+-- INSERT INTO XSOROK02.DEATH ("date", "LOCATION_ID") VALUES (TO_DATE('2015/05/06 20:00:20', 'yyyy/mm/dd hh24:mi:ss'), 1);
+-- SELECT * FROM death_count;
+-- COMMIT;
+-- SELECT * FROM death_count;
 
 COMMIT
