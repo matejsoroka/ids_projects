@@ -416,7 +416,8 @@ BEGIN
 END;
 
 -- TRIGGER na generovanie primarnych klucov v tabulke Player
-CREATE or REPLACE SEQUENCE  player_seq  NOCACHE;
+DROP SEQUENCE player_seq;
+CREATE SEQUENCE  player_seq  NOCACHE;
 CREATE or replace TRIGGER  Player_PK
   BEFORE INSERT ON  PLAYER
   FOR EACH ROW
@@ -582,6 +583,17 @@ GRANT ALL ON PLAYER TO XSLEZA20;
 GRANT ALL ON RACE TO XSLEZA20;
 GRANT INSERT, DELETE ON SESSIONS TO XSLEZA20;
 
+--- Procedura -> vypis vsetkych hracov, ktory maju viacej zlata ako je priemer
+-- SET serveroutput ON;
+BEGIN
+  who_is_rich();
+END;
+
+-- Procedure -> vypise vsetky postavy so zlym povolanim
+BEGIN
+    wrong_class();
+END;
+
 -- trigger test
 --- Trigger na automaticke generovanie hodnot primarneho kluca
 SELECT PLAYER.player_id, PLAYER.name from PLAYER;
@@ -593,19 +605,8 @@ INSERT INTO GAME_ELEMENT ("NAME") VALUES ('New map');
 INSERT INTO MAP ("SCALE", "ELEMENT_ID") SELECT '1:500', element_id FROM GAME_ELEMENT g WHERE g.name='New map';
 
 -- invalid
-INSERT INTO GAME_ELEMENT ("NAME") VALUES ('New map 2');
-INSERT INTO MAP ("SCALE", "ELEMENT_ID") SELECT '1nv4l1d:sc4l3', element_id FROM GAME_ELEMENT g WHERE g.name='New map 2';
-
---- Procedura -> vypis vsetkych hracov, ktory maju viacej zlata ako je priemer
--- SET serveroutput ON;
-BEGIN
-  who_is_rich();
-END;
-
--- Procedure -> vypise vsetky postavy so zlym povolanim
-BEGIN
-    wrong_class();
-END;
+-- INSERT INTO GAME_ELEMENT ("NAME") VALUES ('New map 2');
+-- INSERT INTO MAP ("SCALE", "ELEMENT_ID") SELECT '1nv4l1d:sc4l3', element_id FROM GAME_ELEMENT g WHERE g.name='New map 2';
 
 
 -- for xsleza20
@@ -626,5 +627,6 @@ END;
 -- SELECT * FROM death_count;
 -- COMMIT;
 -- SELECT * FROM death_count;
+
 
 COMMIT
